@@ -1,0 +1,19 @@
+{
+	"time": "Fri Apr 12 2019 23:58:07 GMT-0400 (EDT)",
+	"nativePlatformStatus": "1",
+	"bundle": true,
+	"release": false,
+	"changesRequireBuild": true,
+	"projectFileHash": "34cfc7298ff2c6fda3ff2e7343d5044378e53ed00bdf6ed50c15fd30fd138647",
+	"changesRequireBuildTime": "Fri Apr 12 2019 23:58:07 GMT-0400 (EDT)",
+	"appFilesHashes": {
+		"/Users/fredericaltorres/DVT/VueBlank/app/_app-variables.scss": "3e9f4e54e0c95508509ddd4b618f0eab38752fad",
+		"/Users/fredericaltorres/DVT/VueBlank/app/app.js": "6335efa81ecdacdba8e3d9a5f243a3e03780d8c9",
+		"/Users/fredericaltorres/DVT/VueBlank/app/_app-common.scss": "68f91bf697e9b803daadf13814feae5dd6a14cc0",
+		"/Users/fredericaltorres/DVT/VueBlank/app/PublishToIPhone.md": "3c37faccbb2aa04434b07526bb1122b065482b42",
+		"/Users/fredericaltorres/DVT/VueBlank/app/app.scss": "f040f216168e1a30178efbaaf8b997124cc24118",
+		"/Users/fredericaltorres/DVT/VueBlank/app/components/Home.vue": "7f7f5534e19ef64a21a7b3259f3d0f8d44be61ab",
+		"/Users/fredericaltorres/DVT/VueBlank/app/package.json": "42eb06a3acb1c46af586fe790ae9356e4883bea2",
+		"/Users/fredericaltorres/DVT/VueBlank/app/fonts/FontAwesome.ttf": "13b1eab65a983c7a73bc7997c479d66943f7c6cb"
+	}
+}
