@@ -201,9 +201,9 @@ const {
   login,
   action,
   inputType
-} = __webpack_require__("tns-core-modules/ui/dialogs");
+} = __webpack_require__("../node_modules/tns-core-modules/ui/dialogs/dialogs.js");
 
-const APP_TITLE = "VueNS App";
+const APP_TITLE = "VueNS !! App";
 const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
 
 _common_Tracer__WEBPACK_IMPORTED_MODULE_0__["default"].coloredConsole = false;
@@ -334,8 +334,8 @@ exports.push([module.i, "/**\n * Convenient single import for light variables\n 
 
 // exports
 
-    const application = __webpack_require__("tns-core-modules/application");
-    __webpack_require__("tns-core-modules/ui/styling/style-scope");
+    const application = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+    __webpack_require__("../node_modules/tns-core-modules/ui/styling/style-scope.js");
 
     exports.forEach(cssExport => {
         if (cssExport.length > 1 && cssExport[1]) {
@@ -576,7 +576,7 @@ webpackEmptyContext.id = "./ sync recursive (root|page)\\.(xml|css|js|ts|scss)$"
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("nativescript-vue");
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/nativescript-vue/dist/index.js");
 /* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(nativescript_vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var nativescript_plugin_firebase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../node_modules/nativescript-plugin-firebase/firebase.js");
 /* harmony import */ var nativescript_plugin_firebase__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nativescript_plugin_firebase__WEBPACK_IMPORTED_MODULE_1__);
@@ -592,7 +592,7 @@ __webpack_require__.r(__webpack_exports__);
             const context = __webpack_require__("./ sync recursive (root|page)\\.(xml|css|js|ts|scss)$");
             global.registerWebpackModules(context);
             
-        __webpack_require__("tns-core-modules/bundle-entry-points");
+        __webpack_require__("../node_modules/tns-core-modules/bundle-entry-points.js");
         
 
 
@@ -875,6 +875,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./package.json":
+/***/ (function(module) {
+
+module.exports = {"main":"app.js","android":{"v8Flags":"--expose_gc"}};
+
+/***/ }),
+
 /***/ "./shared/firebase-config.js":
 /***/ (function(module, exports) {
 
@@ -883,118 +890,6 @@ module.exports = {
   //firebaseBucket: "gs://car-rental-b26b7.appspot.com/",
   persist: false
 };
-
-/***/ }),
-
-/***/ "nativescript-vue":
-/***/ (function(module, exports) {
-
-module.exports = require("nativescript-vue");
-
-/***/ }),
-
-/***/ "tns-core-modules/application":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/application");
-
-/***/ }),
-
-/***/ "tns-core-modules/application-settings":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/application-settings");
-
-/***/ }),
-
-/***/ "tns-core-modules/application/application":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/application/application");
-
-/***/ }),
-
-/***/ "tns-core-modules/bundle-entry-points":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/bundle-entry-points");
-
-/***/ }),
-
-/***/ "tns-core-modules/file-system":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/file-system");
-
-/***/ }),
-
-/***/ "tns-core-modules/image-source":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/image-source");
-
-/***/ }),
-
-/***/ "tns-core-modules/platform/platform":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/platform/platform");
-
-/***/ }),
-
-/***/ "tns-core-modules/ui/content-view":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/ui/content-view");
-
-/***/ }),
-
-/***/ "tns-core-modules/ui/core/properties":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/ui/core/properties");
-
-/***/ }),
-
-/***/ "tns-core-modules/ui/core/view-base":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/ui/core/view-base");
-
-/***/ }),
-
-/***/ "tns-core-modules/ui/dialogs":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/ui/dialogs");
-
-/***/ }),
-
-/***/ "tns-core-modules/ui/enums/enums":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/ui/enums/enums");
-
-/***/ }),
-
-/***/ "tns-core-modules/ui/styling/style-scope":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/ui/styling/style-scope");
-
-/***/ }),
-
-/***/ "tns-core-modules/utils/types":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/utils/types");
-
-/***/ }),
-
-/***/ "tns-core-modules/utils/utils":
-/***/ (function(module, exports) {
-
-module.exports = require("tns-core-modules/utils/utils");
 
 /***/ })
 
