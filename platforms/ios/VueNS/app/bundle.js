@@ -156,6 +156,8 @@ module.exports =
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _common_Tracer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./common/Tracer.js");
+/* harmony import */ var _RepositoryDetails_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./components/RepositoryDetails.vue");
 //
 //
 //
@@ -203,9 +205,14 @@ const {
 
 const APP_TITLE = "VueNS App";
 const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
+
+_common_Tracer__WEBPACK_IMPORTED_MODULE_0__["default"].coloredConsole = false;
+_common_Tracer__WEBPACK_IMPORTED_MODULE_0__["default"].log('Logging from TRACER@@@@');
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data() {
     return {
+      name: 'Home.vue',
       appTitle: APP_TITLE,
       appStatus: "Init",
       showMore: true,
@@ -215,7 +222,7 @@ const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
 
   methods: {
     onPageLoaded(args) {
-      console.log(`ON_PAGE_LOADED...`);
+      console.log(`ON_PAGE_LOADED...==`);
     },
 
     alert() {
@@ -228,19 +235,24 @@ const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
     },
 
     onItemTap(args) {
-      const selectedRepo = this.repository[args.index];
-      alert({
-        title: this.appTitle,
-        message: `repo:${selectedRepo.name}`,
-        okButtonText: "OK"
-      });
+      const selectedRepo = this.repository[args.index]; //alert({title: this.appTitle, message: `repo:${selectedRepo.name}`, okButtonText: "OK"});
+
       console.log(`Index:${args.index}, Repo:${selectedRepo.name}`);
+      ; // this.$emit("select", selectedRepo);
+      // https://docs.nativescript.org/core-concepts/navigation
+
+      this.$navigateTo(_RepositoryDetails_vue__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        props: {
+          repository: selectedRepo
+        }
+      });
+      console.log(`NAVIGATED Index:${args.index}, Repo:${selectedRepo.name}`);
     }
 
   },
 
   created() {
-    console.log(`CREATED...`);
+    console.log(`CREATED... name:${this.name}`);
     console.log(`Loading data ${new Date()}`);
     fetch(repoUrl).then(response => response.json()).then(repoArray => {
       console.log(`${repoArray.length} repository found`);
@@ -261,6 +273,48 @@ const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
   computed: {
     message() {
       return "computed";
+    }
+
+  }
+});
+
+/***/ }),
+
+/***/ "../node_modules/babel-loader/lib/index.js!../node_modules/vue-loader/lib/index.js?!./components/RepositoryDetails.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["repository"],
+
+  data() {
+    console.log(`DATA... name:RepositoryDetails.vue`);
+    return {
+      name: 'RepositoryDetails.vue'
+    };
+  },
+
+  mounted() {
+    console.log(`MOUNTED... name:${this.name}`);
+  },
+
+  created() {
+    console.log(`CREATED... name:${this.name}, repository:${JSON.stringify(this.repository)}`);
+  },
+
+  computed: {
+    getRepository() {
+      return this.repository || {};
     }
 
   }
@@ -435,6 +489,43 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "../node_modules/vue-loader/lib/loaders/templateLoader.js?!../node_modules/vue-loader/lib/index.js?!./components/RepositoryDetails.vue?vue&type=template&id=6379a3cd&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "Page",
+    { staticClass: "page" },
+    [
+      _c(
+        "ActionBar",
+        { staticClass: "action-bar" },
+        [
+          _c("Label", {
+            staticClass: "action-bar-title",
+            attrs: { text: "getRepository.name", horizontalAlignment: "center" }
+          })
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./ sync ^\\.\\/app\\.(css|scss|less|sass)$":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -487,7 +578,11 @@ webpackEmptyContext.id = "./ sync recursive (root|page)\\.(xml|css|js|ts|scss)$"
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("nativescript-vue");
 /* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(nativescript_vue__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_Home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./components/Home.vue");
+/* harmony import */ var nativescript_plugin_firebase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../node_modules/nativescript-plugin-firebase/firebase.js");
+/* harmony import */ var nativescript_plugin_firebase__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nativescript_plugin_firebase__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _shared_firebase_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("./shared/firebase-config.js");
+/* harmony import */ var _shared_firebase_config__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_shared_firebase_config__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_Home__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("./components/Home.vue");
 
             __webpack_require__("../node_modules/nativescript-dev-webpack/load-application-css-regular.js")();
             
@@ -500,14 +595,34 @@ __webpack_require__.r(__webpack_exports__);
         __webpack_require__("tns-core-modules/bundle-entry-points");
         
 
+
+ // import CarDetails from "./components/RepositoryDetails.vue";
+
+nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = true;
 new nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   template: `
         <Frame>
             <Home />
         </Frame>`,
   components: {
-    Home: _components_Home__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Home: _components_Home__WEBPACK_IMPORTED_MODULE_3__["default"] // CarDetails
+
+  },
+
+  created() {// console.log(`[APP]Starting, init firebase config:${JSON.stringify(config)}`);
+    // firebase.init(config).then(
+    //     instance => {
+    //         console.log("firebase.init done");
+    //         cars.load().then((data) => {
+    //             this.cars = Object.values(data);
+    //         })
+    //     },
+    //     error => {
+    //         console.log(`firebase.init -> error: ${error}`);
+    //     }
+    // );
   }
+
 }).$start();
     
         
@@ -530,6 +645,105 @@ exports.push([module.i, "/**\n * Convenient single import for light variables\n 
 ;
     if (false) {}
 
+
+/***/ }),
+
+/***/ "./common/Tracer.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// This color console log mode does not work in IE 11
+class Tracer {
+  constructor() {
+    this.traceOn = true;
+    this.coloredConsole = true;
+  }
+
+  internalTrace(text, style0, style1, logMethod) {
+    if (this.traceOn) {
+      if (this.coloredConsole) logMethod(text, style0, style1);else logMethod(text);
+    }
+  }
+
+  getName(instance) {
+    if (instance && instance.name) return instance.name;
+    return '';
+  }
+
+  getTimeStamp() {
+    return new Date().toLocaleTimeString('en-US');
+  }
+
+  getPrefix(instance) {
+    const name = this.getName(instance);
+    if (name) return `[${this.getTimeStamp()}, ${name}]`;else return `[${this.getTimeStamp()}]`;
+  }
+
+  logObject(obj, instance = null) {
+    this.log(JSON.stringify(obj, null, 2), instance);
+  }
+
+  logComponent(reactComponent, instance = null) {
+    const state = `state:${JSON.stringify(reactComponent.state, null, 4)}`;
+    this.log(state, reactComponent);
+    const props = `props:${JSON.stringify(reactComponent.props, null, 4)}`;
+    this.log(props, reactComponent);
+  }
+
+  log(m, instance = null) {
+    const mm = this.getPrefix(instance);
+
+    if (this.coloredConsole) {
+      this.internalTrace(`%c ${mm}%c ${m}`, 'color:green;', 'color:blue;', console.log);
+    } else {
+      this.internalTrace(`${mm} ${m}`, 'color:green;', 'color:blue;', console.log);
+    }
+
+    return mm + m;
+  }
+
+  warn(m, instance = null) {
+    const mm = `[${this.getTimeStamp()}, ${this.getName(instance)}]`;
+
+    if (this.coloredConsole) {
+      this.internalTrace(`%c ${mm}%c ${m}`, 'color:green;', 'color:blue;', console.warn);
+    } else {
+      this.internalTrace(`${mm} ${m}`, 'color:green;', 'color:blue;', console.warn);
+    }
+
+    return mm + m;
+  }
+
+  notifyUser(m, instance = null) {
+    this.warn(m, instance);
+    alert(m);
+  }
+
+  error(m, instance = null) {
+    const mm = `[${this.getTimeStamp()}, ${this.getName(instance)}]`;
+
+    if (this.coloredConsole) {
+      this.internalTrace(`%c ${mm}%c ${m}`, 'color:green;', 'color:red;', console.error);
+    } else {
+      this.internalTrace(`${mm} ${m}`, 'color:green;', 'color:red;', console.error);
+    }
+
+    return mm + m;
+  }
+
+  throw(error, instance = null) {
+    this.error(error.toString(), instance);
+    throw error;
+  }
+
+  throwIfUndefined(parameter, parameterName, instance = null) {
+    if (typeof parameter === 'undefined') this.throw(`Parameter ${parameterName} must be defined`, instance);
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (new Tracer());
 
 /***/ }),
 
@@ -604,6 +818,74 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./components/RepositoryDetails.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RepositoryDetails_vue_vue_type_template_id_6379a3cd___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./components/RepositoryDetails.vue?vue&type=template&id=6379a3cd&");
+/* harmony import */ var _RepositoryDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./components/RepositoryDetails.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RepositoryDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RepositoryDetails_vue_vue_type_template_id_6379a3cd___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RepositoryDetails_vue_vue_type_template_id_6379a3cd___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "components/RepositoryDetails.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./components/RepositoryDetails.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_RepositoryDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/babel-loader/lib/index.js!../node_modules/vue-loader/lib/index.js?!./components/RepositoryDetails.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_node_modules_vue_loader_lib_index_js_vue_loader_options_RepositoryDetails_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./components/RepositoryDetails.vue?vue&type=template&id=6379a3cd&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RepositoryDetails_vue_vue_type_template_id_6379a3cd___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/vue-loader/lib/loaders/templateLoader.js?!../node_modules/vue-loader/lib/index.js?!./components/RepositoryDetails.vue?vue&type=template&id=6379a3cd&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RepositoryDetails_vue_vue_type_template_id_6379a3cd___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RepositoryDetails_vue_vue_type_template_id_6379a3cd___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./shared/firebase-config.js":
+/***/ (function(module, exports) {
+
+module.exports = {
+  // persist: false,
+  //firebaseBucket: "gs://car-rental-b26b7.appspot.com/",
+  persist: false
+};
+
+/***/ }),
+
 /***/ "nativescript-vue":
 /***/ (function(module, exports) {
 
@@ -618,10 +900,66 @@ module.exports = require("tns-core-modules/application");
 
 /***/ }),
 
+/***/ "tns-core-modules/application-settings":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/application-settings");
+
+/***/ }),
+
+/***/ "tns-core-modules/application/application":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/application/application");
+
+/***/ }),
+
 /***/ "tns-core-modules/bundle-entry-points":
 /***/ (function(module, exports) {
 
 module.exports = require("tns-core-modules/bundle-entry-points");
+
+/***/ }),
+
+/***/ "tns-core-modules/file-system":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/file-system");
+
+/***/ }),
+
+/***/ "tns-core-modules/image-source":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/image-source");
+
+/***/ }),
+
+/***/ "tns-core-modules/platform/platform":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/platform/platform");
+
+/***/ }),
+
+/***/ "tns-core-modules/ui/content-view":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/ui/content-view");
+
+/***/ }),
+
+/***/ "tns-core-modules/ui/core/properties":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/ui/core/properties");
+
+/***/ }),
+
+/***/ "tns-core-modules/ui/core/view-base":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/ui/core/view-base");
 
 /***/ }),
 
@@ -632,10 +970,31 @@ module.exports = require("tns-core-modules/ui/dialogs");
 
 /***/ }),
 
+/***/ "tns-core-modules/ui/enums/enums":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/ui/enums/enums");
+
+/***/ }),
+
 /***/ "tns-core-modules/ui/styling/style-scope":
 /***/ (function(module, exports) {
 
 module.exports = require("tns-core-modules/ui/styling/style-scope");
+
+/***/ }),
+
+/***/ "tns-core-modules/utils/types":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/utils/types");
+
+/***/ }),
+
+/***/ "tns-core-modules/utils/utils":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/utils/utils");
 
 /***/ })
 

@@ -39,10 +39,17 @@
     
     const APP_TITLE = "VueNS App";
     const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
+
+    import Tracer from '../common/Tracer';
+    Tracer.coloredConsole = false;
+    Tracer.log('Logging from TRACER@@@@');
+
+    import RepositoryDetails from "./RepositoryDetails.vue";
     
     export default {
         data() {
             return {
+                name:'Home.vue',
                 appTitle : APP_TITLE,
                 appStatus:"Init",
                 showMore: true,
@@ -51,7 +58,7 @@
         },
         methods:{
             onPageLoaded(args) {
-                console.log(`ON_PAGE_LOADED...`);
+                console.log(`ON_PAGE_LOADED...==`);
             },
             alert() {
                 this.message = "YesYes";
@@ -59,12 +66,17 @@
             },
             onItemTap(args) {
                 const selectedRepo = this.repository[args.index];
-                alert({title: this.appTitle, message: `repo:${selectedRepo.name}`, okButtonText: "OK"});
-                console.log(`Index:${args.index}, Repo:${selectedRepo.name}`);
+                //alert({title: this.appTitle, message: `repo:${selectedRepo.name}`, okButtonText: "OK"});
+                console.log(`Index:${args.index}, Repo:${selectedRepo.name}`);;
+                // this.$emit("select", selectedRepo);
+
+                // https://docs.nativescript.org/core-concepts/navigation
+                this.$navigateTo(RepositoryDetails, { props: { repository: selectedRepo } });
+                console.log(`NAVIGATED Index:${args.index}, Repo:${selectedRepo.name}`);
             },
         },
         created() {
-           console.log(`CREATED...`);
+           console.log(`CREATED... name:${this.name}`);
            console.log(`Loading data ${new Date()}`);
            fetch(repoUrl).then(response => response.json()).then(repoArray => {
                console.log(`${repoArray.length} repository found`);
