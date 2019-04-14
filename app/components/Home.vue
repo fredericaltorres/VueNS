@@ -37,7 +37,7 @@
 <script>
     const { alert, confirm, prompt, login, action, inputType } = require("tns-core-modules/ui/dialogs");
     
-    const APP_TITLE = "VueNS !! App";
+    const APP_TITLE = "VueNS ! App";
     const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
 
     import Tracer from '../common/Tracer';
@@ -66,7 +66,7 @@
             },
             onItemTap(args) {
                 const selectedRepo = this.repository[args.index];
-                //alert({title: this.appTitle, message: `repo:${selectedRepo.name}`, okButtonText: "OK"});
+                alert({title: this.appTitle, message: `repo:${selectedRepo.name}`, okButtonText: "OK"});
                 console.log(`Index:${args.index}, Repo:${selectedRepo.name}`);;
                 // this.$emit("select", selectedRepo);
 

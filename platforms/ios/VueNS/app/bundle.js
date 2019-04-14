@@ -201,9 +201,9 @@ const {
   login,
   action,
   inputType
-} = __webpack_require__("../node_modules/tns-core-modules/ui/dialogs/dialogs.js");
+} = __webpack_require__("tns-core-modules/ui/dialogs");
 
-const APP_TITLE = "VueNS !! App";
+const APP_TITLE = "VueNS ! App";
 const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
 
 _common_Tracer__WEBPACK_IMPORTED_MODULE_0__["default"].coloredConsole = false;
@@ -235,8 +235,12 @@ _common_Tracer__WEBPACK_IMPORTED_MODULE_0__["default"].log('Logging from TRACER@
     },
 
     onItemTap(args) {
-      const selectedRepo = this.repository[args.index]; //alert({title: this.appTitle, message: `repo:${selectedRepo.name}`, okButtonText: "OK"});
-
+      const selectedRepo = this.repository[args.index];
+      alert({
+        title: this.appTitle,
+        message: `repo:${selectedRepo.name}`,
+        okButtonText: "OK"
+      });
       console.log(`Index:${args.index}, Repo:${selectedRepo.name}`);
       ; // this.$emit("select", selectedRepo);
       // https://docs.nativescript.org/core-concepts/navigation
@@ -334,8 +338,8 @@ exports.push([module.i, "/**\n * Convenient single import for light variables\n 
 
 // exports
 
-    const application = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
-    __webpack_require__("../node_modules/tns-core-modules/ui/styling/style-scope.js");
+    const application = __webpack_require__("tns-core-modules/application");
+    __webpack_require__("tns-core-modules/ui/styling/style-scope");
 
     exports.forEach(cssExport => {
         if (cssExport.length > 1 && cssExport[1]) {
@@ -576,13 +580,9 @@ webpackEmptyContext.id = "./ sync recursive (root|page)\\.(xml|css|js|ts|scss)$"
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/nativescript-vue/dist/index.js");
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("nativescript-vue");
 /* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(nativescript_vue__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var nativescript_plugin_firebase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../node_modules/nativescript-plugin-firebase/firebase.js");
-/* harmony import */ var nativescript_plugin_firebase__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nativescript_plugin_firebase__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _shared_firebase_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("./shared/firebase-config.js");
-/* harmony import */ var _shared_firebase_config__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_shared_firebase_config__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_Home__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("./components/Home.vue");
+/* harmony import */ var _components_Home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./components/Home.vue");
 
             __webpack_require__("../node_modules/nativescript-dev-webpack/load-application-css-regular.js")();
             
@@ -592,9 +592,9 @@ __webpack_require__.r(__webpack_exports__);
             const context = __webpack_require__("./ sync recursive (root|page)\\.(xml|css|js|ts|scss)$");
             global.registerWebpackModules(context);
             
-        __webpack_require__("../node_modules/tns-core-modules/bundle-entry-points.js");
-        
-
+        __webpack_require__("tns-core-modules/bundle-entry-points");
+         // import firebase from "nativescript-plugin-firebase";
+// import config from "./shared/firebase-config";
 
  // import CarDetails from "./components/RepositoryDetails.vue";
 
@@ -605,7 +605,7 @@ new nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a({
             <Home />
         </Frame>`,
   components: {
-    Home: _components_Home__WEBPACK_IMPORTED_MODULE_3__["default"] // CarDetails
+    Home: _components_Home__WEBPACK_IMPORTED_MODULE_1__["default"] // CarDetails
 
   },
 
@@ -875,21 +875,38 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./package.json":
-/***/ (function(module) {
+/***/ "nativescript-vue":
+/***/ (function(module, exports) {
 
-module.exports = {"main":"app.js","android":{"v8Flags":"--expose_gc"}};
+module.exports = require("nativescript-vue");
 
 /***/ }),
 
-/***/ "./shared/firebase-config.js":
+/***/ "tns-core-modules/application":
 /***/ (function(module, exports) {
 
-module.exports = {
-  // persist: false,
-  //firebaseBucket: "gs://car-rental-b26b7.appspot.com/",
-  persist: false
-};
+module.exports = require("tns-core-modules/application");
+
+/***/ }),
+
+/***/ "tns-core-modules/bundle-entry-points":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/bundle-entry-points");
+
+/***/ }),
+
+/***/ "tns-core-modules/ui/dialogs":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/ui/dialogs");
+
+/***/ }),
+
+/***/ "tns-core-modules/ui/styling/style-scope":
+/***/ (function(module, exports) {
+
+module.exports = require("tns-core-modules/ui/styling/style-scope");
 
 /***/ })
 

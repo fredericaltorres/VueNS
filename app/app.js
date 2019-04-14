@@ -1,6 +1,6 @@
 import Vue from "nativescript-vue";
-import firebase from "nativescript-plugin-firebase";
-import config from "./shared/firebase-config";
+// import firebase from "nativescript-plugin-firebase";
+// import config from "./shared/firebase-config";
 
 import Home from "./components/Home";
 // import CarDetails from "./components/RepositoryDetails.vue";
