@@ -17,8 +17,11 @@
 
 	Torres Frederic 2018			
 */
+
+import firebase from "nativescript-plugin-firebase";
+
 import Tracer from './Tracer';
-import moment from "moment"; // http://momentjs.com/
+// import moment from "moment"; // http://momentjs.com/
 import FirestoreManagerConfig from './FirestoreManagerConfig';
 import ComponentUtil from './ComponentUtil';
 import TypeUtil from './TypeUtil';
@@ -34,17 +37,20 @@ const getSettings = () => {
 	return { timestampsInSnapshots: true };
 }
 
+let _initialized = false;
+let _monitoredSnapshot = { };
+
 // This class is exported as a singleton.
 // Therefore static members could be just members
 class FirestoreManager {
 
-	static _initialized = false;
+	//static _initialized = false;
 	
 	// Static object to store snapshot unsusbcribe method, to be able to 
 	// unsubscribe and stop monitoring data
-	static _monitoredSnapshot = { };
+	//static _monitoredSnapshot = { };
 	
-	constructor() {
+	constructor(init = true) {
 
 		this.ADMIN_ROLE = "administrator";
 
@@ -53,14 +59,17 @@ class FirestoreManager {
 		this._currentUserAuthAuth = null;
 		this.onCurrentUserLoadedCallBack = null;
 		this.name = "FirestoreManager";
+		Tracer.coloredConsole = false;
 
-		if(!FirestoreManager._initialized) {
+		if(!/*FirestoreManager.*/_initialized) {
 			
 			this.name = 'FirestoreManager';
 			Tracer.log(`FirestoreManager init`, this);
-			firebase.initializeApp(FirestoreManagerConfig);
-			FirestoreManager._initialized = true;
-			this.__setUpOnAuthStateChanged();
+			/*FirestoreManager.*/_initialized = true;
+			if(init) {
+				firebase.initializeApp(FirestoreManagerConfig);
+				this.__setUpOnAuthStateChanged();
+			}
 		}
 	}
 
@@ -322,6 +331,7 @@ class FirestoreManager {
 	}
 
 	getStorageFullPath(parentFolder, fileName) {
+
 		return (parentFolder == null) ? "" : parentFolder.toString() + "/" + fileName;
 	}
 
@@ -376,11 +386,11 @@ class FirestoreManager {
 
 	stopMonitorQuery(collection) {
 		
-		if(FirestoreManager._monitoredSnapshot[collection]) {
+		if(_monitoredSnapshot[collection]) {
 
 			Tracer.log(`Unsubscribe monitored snapshot:${collection}`, this);
-			this.__unsubscribeMonitoredSnapshot(FirestoreManager._monitoredSnapshot[collection]);
-			delete FirestoreManager._monitoredSnapshot[collection];
+			this.__unsubscribeMonitoredSnapshot(_monitoredSnapshot[collection]);
+			delete _monitoredSnapshot[collection];
 		}
 	} 
 
@@ -419,7 +429,7 @@ class FirestoreManager {
 		}
 
 		// Return a function handler that can unsubscribe the snapshot 
-		FirestoreManager._monitoredSnapshot[collection] = query.onSnapshot((querySnapshot) => {
+		_monitoredSnapshot[collection] = query.onSnapshot((querySnapshot) => {
 
 			let records = this.__rebuildDocuments(querySnapshot)
 			try {
@@ -655,4 +665,4 @@ class FirestoreManager {
 	}
 }  
 
-export default new FirestoreManager();
+export default new FirestoreManager(false);
