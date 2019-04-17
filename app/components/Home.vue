@@ -37,7 +37,7 @@
 <script>
     const { alert, confirm, prompt, login, action, inputType } = require("tns-core-modules/ui/dialogs");
     
-    const APP_TITLE = "VueNS ! App";
+    const APP_TITLE = "VueNS !!! App";
     const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
 
     import Tracer from '../common/Tracer';
