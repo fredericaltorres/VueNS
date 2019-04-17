@@ -6,14 +6,14 @@
 		<ScrollView>
 			<StackLayout class="home-panel">
 
-                <ListView for="dbLink in DBLinks" @itemTap="onItemTap"  left="2" top="2" height="370" width="100%" >
+                <ListView for="rep in repository" @itemTap="onItemTap"  left="2" top="2" height="370" width="100%" >
                     <v-template>
                         <!-- <Label :text="rep.name" /> -->
                         <!-- https://docs.nativescript.org/ui/layouts/layout-containers -->
                         <GridLayout class="list-group-item" rows="auto,*" columns="*">
                             <!-- <Image row="0" col="0" :src="item.src" class="thumb img-circle" /> -->
-                            <Label backgroundColor="white"  class="listView-Item-Title" row="0" col="0" :text="` ${dbLink.description}`" /> 
-                            <Label backgroundColor="white" class="listView-Item-Description" row="1" col="0" :text="` ${dbLink.category}, ${Object.values(dbLink.files).length} file(s)`" />
+                            <Label backgroundColor="white"  class="listView-Item-Title" row="0" col="0" :text="` ${rep.name}`" /> 
+                            <Label backgroundColor="white" class="listView-Item-Description" row="1" col="0" :text="` ${rep.description}`" />
                         </GridLayout>
                     </v-template>
 			    </ListView>
@@ -23,7 +23,7 @@
 			   <Label class="info" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
                         <Span class="fa" text.decode="&#xf135; "/>
-                        <Span :text="`${DBLinks.length} links`"/>
+                        <Span :text="`${repository.length} repositories`"/>
                       
                     </FormattedString>
                 </Label>
@@ -42,7 +42,7 @@
     import Tracer from '../common/Tracer';
     Tracer.coloredConsole = false;
 
-    const APP_TITLE = "dbLinks App";
+    const APP_TITLE = "VueNS !!! App";
     const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
     
     export default {
@@ -50,7 +50,7 @@
             return {
                 name:'Home.vue',
                 appTitle : APP_TITLE,
-                appStatus: "Loading...",
+                appStatus:"Init",
                 showMore: true,
                 repository:[],
                 DBLinks:[],
@@ -88,7 +88,6 @@
             (dbLinks) => { 
                 Tracer.log(`Collection ${DBLinksCollectionName} change detected, ${dbLinks.length} record(s)`, this);
                 this.DBLinks = dbLinks;
-                this.appStatus = "Rdy";
             },
             'createdAt', undefined, undefined, firebaseManagerNS.whereClause('category', 'Software', 'All')
             );

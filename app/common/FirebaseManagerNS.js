@@ -13,6 +13,8 @@ const getSettings = () => {
 
 class FirebaseManagerNS {
 
+    // static _initialized = false;
+	
     constructor() {
 
         Tracer.coloredConsole = false;

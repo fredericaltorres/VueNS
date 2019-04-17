@@ -21,13 +21,9 @@ new Vue({
 
     created() {
         console.log(`[APP]Starting, init firebase config:${JSON.stringify(config)}`);
-        const DBLinksCollectionName = 'DBLinks';
-        firebaseManagerNS.monitorQuery(DBLinksCollectionName,
-        (records) => { 
-            Tracer.log(`Collection ${DBLinksCollectionName} change detected, ${records.length} record(s)`, this);
-        },
-        'createdAt', undefined, undefined, firebaseManagerNS.whereClause('category', 'Software', 'All')
-        );
+   
+
+
         // firebase.init({ persist: false }).then(
         //     instance => {
         //         try {
