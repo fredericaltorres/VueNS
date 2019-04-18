@@ -18,13 +18,12 @@
                     </v-template>
 			    </ListView>
 
-<Label text="..." /> 
+<Label text="----" /> 
 
 			   <Label class="info" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
                         <Span class="fa" text.decode="&#xf135; "/>
                         <Span :text="`${DBLinks.length} links`"/>
-                      
                     </FormattedString>
                 </Label>
 				<Button class="btn btn-primary" text="Alert Me" @tap="alert" />
@@ -40,8 +39,8 @@
     import firebaseManagerNS from '../common/FirebaseManagerNS';
     import RepositoryDetails from "./RepositoryDetails.vue";
     import Tracer from '../common/Tracer';
-    Tracer.coloredConsole = false;
 
+    //Tracer.coloredConsole = false;
     const APP_TITLE = "dbLinks App";
     const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
     
@@ -52,27 +51,29 @@
                 appTitle : APP_TITLE,
                 appStatus: "Loading...",
                 showMore: true,
-                repository:[],
                 DBLinks:[],
             }
         },
+        components: {
+            RepositoryDetails
+        },
         methods:{
             onPageLoaded(args) {
-                console.log(`ON_PAGE_LOADED...==`);
+                console.log(`onPageLoaded`, this);
             },
             alert() {
                 this.message = "YesYes";
                 alert({title: this.appTitle, message: `Alert Me Clicked`, okButtonText: "OK"});
             },
             onItemTap(args) {
-                const selectedRepo = this.repository[args.index];
-                alert({title: this.appTitle, message: `Repository!:${selectedRepo.name}`, okButtonText: "OK"});
-                console.log(`Index:${args.index}, Repo:${selectedRepo.name}`);;
+                const dbLink = this.DBLinks[args.index];
+                //alert({title: this.appTitle, message: `dbLink!:${dbLink.description}`, okButtonText: "OK"});
+                Tracer.log(`OPEN dbLink:${dbLink.description}`,this);
+                
                 // this.$emit("select", selectedRepo);
-
                 // https://docs.nativescript.org/core-concepts/navigation
-                this.$navigateTo(RepositoryDetails, { props: { repository: selectedRepo } });
-                console.log(`NAVIGATED Index:${args.index}, Repo:${selectedRepo.name}`);
+                this.$navigateTo(RepositoryDetails, { props: { dbLink: dbLink } });
+                //console.log(`NAVIGATED Index:${args.index}, Repo:${selectedRepo.name}`);
             },
         },
         created() {

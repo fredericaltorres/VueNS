@@ -24,10 +24,10 @@ class FirebaseManagerNS {
         this._settings = getSettings();
         firebase.init({ persist: false }).then(
             instance => {
-                Tracer.log("firebase.init done ");
+                Tracer.log("firebase.init done ", this);
             },
             error => {
-                Tracer.log(`firebase.init -> error: ${error}`);
+                Tracer.log(`firebase.init -> error: ${error}`, this);
             }
         );
     }

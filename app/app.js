@@ -6,48 +6,27 @@ import Home from "./components/Home";
 import Tracer from './common/Tracer';
 import firebaseManagerNS from './common/FirebaseManagerNS';
 
-Vue.config.silent = true;
+Tracer.coloredConsole = false;
+
+Vue.config.silent = false;
+
+Tracer.log(`Creating`, {name:'app.js'});
 
 new Vue({
-
+    data() {
+        return {
+            name:'app.js',
+        }
+    },
+    //render: h => h('frame', [h(Home)]),
     template: `
         <Frame>
             <Home />
         </Frame>`,
-
     components: {
         Home,
     },
-
     created() {
-        console.log(`[APP]Starting, init firebase config:${JSON.stringify(config)}`);
-   
-
-
-        // firebase.init({ persist: false }).then(
-        //     instance => {
-        //         try {
-        //             console.log("firebase.init done");
-        //             const firestoreDB = firebase.firestore;
-        //             console.log(`firestoreDB:${typeof(firestoreDB)}`);
-        //             console.log(`collection::${typeof(firestoreDB.collection)}`);
-        //             const docRef = firestoreDB.collection('DBLinks').doc('eca283b28904');
-        //             console.log(`docRef:${typeof(docRef)}`);
-        //             docRef.get().then((doc) => {
-        //                 const data = doc.data();
-        //                 console.log(`Firestore DBLink ${JSON.stringify(data)}`);
-        //             }).catch((err) => {
-        //                 console.error(`error catch reading firestore db err:${err}`);
-        //             });
-        //         }
-        //         catch(ex){
-        //             console.error(`error reading firestore data ex:${ex}`);
-        //         }
-        //     },
-        //     error => {
-        //         console.log(`firebase.init -> error: ${error}`);
-        //     }
-        // );
+        Tracer.log(`Created`, this);
     }
-
 }).$start();

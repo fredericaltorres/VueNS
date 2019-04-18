@@ -1,32 +1,79 @@
 <template>
     <Page class="page">
+         <!-- <ActionBar title="Friends" /> -->
         <ActionBar class="action-bar">
-            <!-- <NavigationButton @tap="$navigateBack()" android.systemIcon="ic_menu_back" /> -->
-            <Label class="action-bar-title" text="getRepository.name" horizontalAlignment="center" />
+            <!-- <NavigationButton @tap="$navigateBack()" android.systemIcon="ic_menu_back" />  -->
+            <Label class="action-bar-title" :text="getDBLink.description" horizontalAlignment="center" />
         </ActionBar>
+
+        <ScrollView>
+            <StackLayout>
+
+                <!-- https://docs.nativescript.org/angular/ui/ng-ui-widgets/formatted-string -->
+                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                    <FormattedString>
+                        <Span color="#990000" fontAttributes="Bold" :text="getDBLink.description"/>
+                    </FormattedString>
+                </Label>
+                 <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                    <FormattedString>
+                        <Span text="Link: "/>
+                        <Span color="#990000" fontAttributes="Bold" :text="getDBLink.link"/>
+                    </FormattedString>
+                </Label>
+                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                    <FormattedString>
+                        <Span text="Category: "/>
+                        <Span color="#990000" fontAttributes="Bold" :text="getDBLink.category"/>
+                    </FormattedString>
+                </Label>
+                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                    <FormattedString>
+                        <Span text="Last Updated: "/>
+                        <Span color="#990000" fontAttributes="Bold" :text="getDBLink.updateAt"/>
+                    </FormattedString>
+                </Label>                
+            </StackLayout>
+        </ScrollView>
     </Page>
 </template>
 
 <script>
 
-    export default {
-        props: ["repository"],
-        data() {
-            console.log(`DATA... name:RepositoryDetails.vue`);
-            return {
-                name:'RepositoryDetails.vue'
-            };
-        },
-        mounted() {
-           console.log(`MOUNTED... name:${this.name}`);
-        },
-        created() {
-            console.log(`CREATED... name:${this.name}, repository:${JSON.stringify(this.repository)}`);
-        },
-        computed: {
-            getRepository() {
-                return this.repository || {};
-            }
-        },
-    };
+import Tracer from '../common/Tracer';
+
+export default {
+    props: ["dbLink"],
+    data() {
+        Tracer.log(`DATA... name:RepositoryDetails.vue`, this);
+        return {
+            name:'RepositoryDetails.vue'
+        };
+    },
+    mounted() {
+        Tracer.log(`MOUNTED... name:${this.name}`, this);
+    },
+    created() {
+        Tracer.log(`CREATED... name:${this.name}, dbLink:${JSON.stringify(this.dbLink)}`, this);
+    },
+    computed: {
+        getDBLink() {
+            return this.dbLink || {};
+        }
+    },
+};
 </script>
+
+
+<style scoped lang="scss">
+    // Start custom common variables
+    @import '../app-variables';
+    // End custom common variables
+
+    .info {
+        font-size: 20;
+        height: 30;
+    }
+    
+    
+</style>
