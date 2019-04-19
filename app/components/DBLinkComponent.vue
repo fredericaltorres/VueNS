@@ -35,7 +35,7 @@
                     </FormattedString>
                 </Label> 
 
-                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                <Label horizontalAlignment="left" verticalAlignment="center">
                     <FormattedString>
                         <Span text="Files: "/>
                         <Span color="#990000" fontAttributes="Bold" :text="this.getDBLinkFiles.length"/>
@@ -63,10 +63,8 @@ export default {
         };
     },
     mounted() {
-        Tracer.log(`MOUNTED... name:${this.name}`, this);
     },
     created() {
-        Tracer.log(`CREATED... name:${this.name}, dbLink:${JSON.stringify(this.dbLink)}`, this);
     },
     computed: {
         getDBLink() {
@@ -76,7 +74,7 @@ export default {
             return Object.keys(this.getDBLink.files);
         },
         getDBLinkUpdateAt() {
-            return TypeDefUtil.formatFirebaseTimestamp(this.dbLink.updateAt);
+            return TypeDefUtil.formatFirebaseTimestamp(this.dbLink.updatedAt);
         }
     }
 };
