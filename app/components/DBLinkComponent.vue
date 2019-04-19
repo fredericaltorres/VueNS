@@ -1,9 +1,10 @@
-<template>
+        <template>
     <Page class="page">
          <!-- <ActionBar title="Friends" /> -->
         <ActionBar class="action-bar">
             <!-- <NavigationButton @tap="$navigateBack()" android.systemIcon="ic_menu_back" />  -->
             <Label class="action-bar-title" :text="getDBLink.description" horizontalAlignment="center" />
+       
         </ActionBar>
 
         <ScrollView>
@@ -30,9 +31,19 @@
                 <Label class="info" horizontalAlignment="left" verticalAlignment="center">
                     <FormattedString>
                         <Span text="Last Updated: "/>
-                        <Span color="#990000" fontAttributes="Bold" :text="getDBLink.updateAt"/>
+                        <Span color="#990000" fontAttributes="Bold" :text="this.getDBLinkUpdateAt"/>
                     </FormattedString>
-                </Label>                
+                </Label> 
+
+                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                    <FormattedString>
+                        <Span text="Files: "/>
+                        <Span color="#990000" fontAttributes="Bold" :text="this.getDBLinkFiles.length"/>
+                    </FormattedString>
+                </Label>   
+
+                <Label v-for="file in this.getDBLinkFiles" :key="file" :text="file" horizontalAlignment="left" />
+                  
             </StackLayout>
         </ScrollView>
     </Page>
@@ -41,6 +52,7 @@
 <script>
 
 import Tracer from '../common/Tracer';
+import TypeDefUtil from '../common/TypeDefUtil';
 
 export default {
     props: ["dbLink"],
@@ -59,8 +71,14 @@ export default {
     computed: {
         getDBLink() {
             return this.dbLink || {};
+        },
+        getDBLinkFiles() {
+            return Object.keys(this.getDBLink.files);
+        },
+        getDBLinkUpdateAt() {
+            return TypeDefUtil.formatFirebaseTimestamp(this.dbLink.updateAt);
         }
-    },
+    }
 };
 </script>
 

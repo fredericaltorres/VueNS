@@ -89,14 +89,12 @@ class TypeDefUtil {
 	// https://firebase.google.com/docs/reference/js/firebase.firestore.Timestamp
 	formatFirebaseTimestamp(timestamp, format = 'YYYY/MM/DD h:mm:ss a') {
 
-		const m = moment(timestamp.toDate());
-		const s = m.format(format);
-		return s;
+		//const m = moment(timestamp.toDate());
+		//const s = m.format(format);
+		//return s;
+		return "daty";
 	}
 
-	zizi() {
-		
-	}
 	// renderEditControlsJsx(typeDef, entity) {
 
 	// 	const l = [];

@@ -1,24 +1,25 @@
 <template>
     <Page class="page" @loaded="onPageLoaded">
         <ActionBar class="action-bar">
-            <Label class="action-bar-title" :text="`${appTitle} (${appStatus})`"></Label>
+            <Label class="action-bar-title" :text="appTitle"></Label>
         </ActionBar>
 		<ScrollView>
 			<StackLayout class="home-panel">
 
-                <ListView for="dbLink in DBLinks" @itemTap="onItemTap"  left="2" top="2" height="370" width="100%" >
+                <ListView for="dbLink in DBLinks" @itemTap="onItemTap" left="2" top="2" height="400" width="100%" >
                     <v-template>
                         <!-- <Label :text="rep.name" /> -->
                         <!-- https://docs.nativescript.org/ui/layouts/layout-containers -->
-                        <GridLayout class="list-group-item" rows="auto,*" columns="*">
+                        <GridLayout class="list-group-item" rows="auto,*" columns="auto,*">
                             <!-- <Image row="0" col="0" :src="item.src" class="thumb img-circle" /> -->
-                            <Label backgroundColor="white"  class="listView-Item-Title" row="0" col="0" :text="` ${dbLink.description}`" /> 
-                            <Label backgroundColor="white" class="listView-Item-Description" row="1" col="0" :text="` ${dbLink.category}, ${Object.values(dbLink.files).length} file(s)`" />
+                            
+                            <Image rowSpan="2" left="2" height="50" row="0" col="0" src="~/images/i.png" class="listView-Image" />
+                            <Label backgroundColor="white" class="listView-Item-Title" row="0" col="1" :text="` ${dbLink.description}`" /> 
+                            
+                            <Label backgroundColor="white" class="listView-Item-Description" row="1" col="1" :text="` ${dbLink.category}, ${Object.values(dbLink.files).length} file(s)`" />
                         </GridLayout>
                     </v-template>
 			    </ListView>
-
-<Label text="----" /> 
 
 			   <Label class="info" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
@@ -27,7 +28,6 @@
                     </FormattedString>
                 </Label>
 				<Button class="btn btn-primary" text="Alert Me" @tap="alert" />
-               
 			</StackLayout>
 		</ScrollView>
     </Page>
@@ -37,7 +37,7 @@
     const { alert, confirm, prompt, login, action, inputType } = require("tns-core-modules/ui/dialogs");
  
     import firebaseManagerNS from '../common/FirebaseManagerNS';
-    import RepositoryDetails from "./RepositoryDetails.vue";
+    import DBLinkComponent from "./DBLinkComponent.vue";
     import Tracer from '../common/Tracer';
 
     //Tracer.coloredConsole = false;
@@ -52,14 +52,14 @@
                 appStatus: "Loading...",
                 showMore: true,
                 DBLinks:[],
+                category: 'All'
             }
         },
         components: {
-            RepositoryDetails
+            DBLinkComponent
         },
         methods:{
-            onPageLoaded(args) {
-                console.log(`onPageLoaded`, this);
+            onPageLoaded(args) { 
             },
             alert() {
                 this.message = "YesYes";
@@ -67,38 +67,28 @@
             },
             onItemTap(args) {
                 const dbLink = this.DBLinks[args.index];
-                //alert({title: this.appTitle, message: `dbLink!:${dbLink.description}`, okButtonText: "OK"});
                 Tracer.log(`OPEN dbLink:${dbLink.description}`,this);
-                
-                // this.$emit("select", selectedRepo);
                 // https://docs.nativescript.org/core-concepts/navigation
-                this.$navigateTo(RepositoryDetails, { props: { dbLink: dbLink } });
-                //console.log(`NAVIGATED Index:${args.index}, Repo:${selectedRepo.name}`);
+                this.$navigateTo(DBLinkComponent, { props: { dbLink: dbLink } });
             },
         },
         created() {
-        //    fetch(repoUrl).then(response => response.json()).then(repoArray => {
-        //        console.log(`${repoArray.length} repository found`);
-        //        this.repository = repoArray;
-        //        this.appStatus = "Rdy";
-        //        console.log(`Loaded data ${new Date()}`);
-        //    });
 
             const DBLinksCollectionName = 'DBLinks';
-            firebaseManagerNS.monitorQuery(DBLinksCollectionName,
-            (dbLinks) => { 
-                Tracer.log(`Collection ${DBLinksCollectionName} change detected, ${dbLinks.length} record(s)`, this);
-                this.DBLinks = dbLinks;
-                this.appStatus = "Rdy";
-            },
-            'createdAt', undefined, undefined, firebaseManagerNS.whereClause('category', 'Software', 'All')
+            firebaseManagerNS.monitorQuery(
+                DBLinksCollectionName,
+                (dbLinks) => { 
+                    Tracer.log(`Collection ${DBLinksCollectionName} change detected, ${dbLinks.length} record(s)`, this);
+                    this.DBLinks = dbLinks;
+                    this.appStatus = "";
+                },
+                'category', undefined, undefined, 
+                firebaseManagerNS.whereClause('category', this.category, 'All')
             );
         },
         mounted() {
-           console.log(`MOUNTED...`);
         },
         destroyed() {
-            console.log(`DESTROYED...`);
         },
         computed: {
             message() {
@@ -106,6 +96,15 @@
             }
         }
     };
+
+
+ 
+        //    fetch(repoUrl).then(response => response.json()).then(repoArray => {
+        //        console.log(`${repoArray.length} repository found`);
+        //        this.repository = repoArray;
+        //        this.appStatus = "Rdy";
+        //        console.log(`Loaded data ${new Date()}`);
+        //    });   
 </script>
 
 <style scoped lang="scss">
@@ -113,22 +112,22 @@
     @import '../app-variables';
     // End custom common variables
 
-    ListView Label {
-		//height: 35;
-		// min-height: 48;
-	}
-
     // Custom styles
     .fa {
         color: $accent-dark;
     }
-
     .info {
         font-size: 20;
     }
     .btn {
         font-size: 20;
         font-weight: bold;
+    }
+    .listView-Image {
+        padding-left: 4;
+        padding-right: 4;
+        padding-bottom: 4;
+        padding-top: 4;
     }
     .listView-Item-Title {
          font-weight: bold;
@@ -143,3 +142,4 @@
         // margin-left: 4
     }
 </style>
+
