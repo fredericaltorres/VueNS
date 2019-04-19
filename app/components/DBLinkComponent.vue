@@ -1,10 +1,7 @@
         <template>
     <Page class="page">
-         <!-- <ActionBar title="Friends" /> -->
         <ActionBar class="action-bar">
-            <!-- <NavigationButton @tap="$navigateBack()" android.systemIcon="ic_menu_back" />  -->
             <Label class="action-bar-title" :text="getDBLink.description" horizontalAlignment="center" />
-       
         </ActionBar>
 
         <ScrollView>
@@ -28,12 +25,15 @@
                         <Span color="#990000" fontAttributes="Bold" :text="getDBLink.category"/>
                     </FormattedString>
                 </Label>
-                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                <Label horizontalAlignment="left" verticalAlignment="center">
                     <FormattedString>
                         <Span text="Last Updated: "/>
                         <Span color="#990000" fontAttributes="Bold" :text="this.getDBLinkUpdateAt"/>
                     </FormattedString>
                 </Label> 
+
+
+ <Label text="---------------------------------------------" horizontalAlignment="center" />
 
                 <Label horizontalAlignment="left" verticalAlignment="center">
                     <FormattedString>
@@ -57,7 +57,6 @@ import TypeDefUtil from '../common/TypeDefUtil';
 export default {
     props: ["dbLink"],
     data() {
-        Tracer.log(`DATA... name:RepositoryDetails.vue`, this);
         return {
             name:'RepositoryDetails.vue'
         };
@@ -80,16 +79,10 @@ export default {
 };
 </script>
 
-
 <style scoped lang="scss">
-    // Start custom common variables
     @import '../app-variables';
-    // End custom common variables
-
     .info {
         font-size: 20;
         height: 30;
     }
-    
-    
 </style>

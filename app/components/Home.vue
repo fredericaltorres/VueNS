@@ -8,15 +8,12 @@
 
                 <ListView for="dbLink in DBLinks" @itemTap="onItemTap" left="2" top="2" height="400" width="100%" >
                     <v-template>
-                        <!-- <Label :text="rep.name" /> -->
                         <!-- https://docs.nativescript.org/ui/layouts/layout-containers -->
                         <GridLayout class="list-group-item" rows="auto,*" columns="auto,*">
-                            <!-- <Image row="0" col="0" :src="item.src" class="thumb img-circle" /> -->
-                            
+
                             <Image rowSpan="2" left="2" height="50" row="0" col="0" src="~/images/i.png" class="listView-Image" />
-                            <Label backgroundColor="white" class="listView-Item-Title" row="0" col="1" :text="` ${dbLink.description}`" /> 
-                            
-                            <Label backgroundColor="white" class="listView-Item-Description" row="1" col="1" :text="` ${dbLink.category}, ${Object.values(dbLink.files).length} file(s)`" />
+                            <Label class="listView-Item-Title" row="0" col="1" :text="` ${dbLink.description}`" /> 
+                            <Label class="listView-Item-Description" row="1" col="1" :text="` ${dbLink.category}, ${Object.values(dbLink.files).length} file(s)`" />
                         </GridLayout>
                     </v-template>
 			    </ListView>
