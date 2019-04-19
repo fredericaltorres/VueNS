@@ -1,10 +1,16 @@
 <template>
-    <Page class="page" @loaded="onPageLoaded">
+    <Page class="page">
         <ActionBar class="action-bar">
             <Label class="action-bar-title" :text="appTitle"></Label>
         </ActionBar>
 		<ScrollView>
 			<StackLayout class="home-panel">
+
+                <!-- https://nativescript-vue.org/en/docs/elements/components/list-picker/ -->
+                <ListPicker id="categoryListPicker" :items="this.categories" :selectedIndex="0" class="p-15 picker" row="1"
+              
+                @selectedIndexChange="categoryListPicker_selectedIndexChange"
+                />
 
                 <ListView for="dbLink in DBLinks" @itemTap="onItemTap" left="2" top="2" height="400" width="100%" >
                     <v-template>
@@ -37,7 +43,6 @@
     import DBLinkComponent from "./DBLinkComponent.vue";
     import Tracer from '../common/Tracer';
 
-    //Tracer.coloredConsole = false;
     const APP_TITLE = "dbLinks App";
     const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
     
@@ -49,14 +54,19 @@
                 appStatus: "Loading...",
                 showMore: true,
                 DBLinks:[],
-                category: 'All'
+                category: 'All',
+                categories: [`All`,`Hardware`,`Software`,`Other`],
+                categorySelectedIndex:0,
             }
         },
         components: {
             DBLinkComponent
         },
-        methods:{
-            onPageLoaded(args) { 
+        methods: {
+            categoryListPicker_selectedIndexChange(picker) {
+                this.categorySelectedIndex = picker.object.selectedIndex;
+                Tracer.log(`categoryListPicker_selectedIndexChange:${this.selectedCategory}`);
+                this.monitorDBLinks();
             },
             alert() {
                 this.message = "YesYes";
@@ -65,29 +75,33 @@
             onItemTap(args) {
                 const dbLink = this.DBLinks[args.index];
                 Tracer.log(`OPEN dbLink:${dbLink.description}`,this);
-                // https://docs.nativescript.org/core-concepts/navigation
-                this.$navigateTo(DBLinkComponent, { props: { dbLink: dbLink } });
+                this.$navigateTo(DBLinkComponent, { props: { dbLink: dbLink } });  // https://docs.nativescript.org/core-concepts/navigation
             },
+            monitorDBLinks() {
+                const DBLinksCollectionName = 'DBLinks';
+                firebaseManagerNS.monitorQuery(
+                    DBLinksCollectionName,
+                    (dbLinks) => { 
+                        Tracer.log(`Collection ${DBLinksCollectionName} change detected, ${dbLinks.length} record(s)`, this);
+                        this.DBLinks = dbLinks;
+                        this.appStatus = "";
+                    },
+                    'category', undefined, undefined, 
+                    firebaseManagerNS.whereClause('category', this.selectedCategory, 'All')
+                );
+            }
         },
         created() {
-
-            const DBLinksCollectionName = 'DBLinks';
-            firebaseManagerNS.monitorQuery(
-                DBLinksCollectionName,
-                (dbLinks) => { 
-                    Tracer.log(`Collection ${DBLinksCollectionName} change detected, ${dbLinks.length} record(s)`, this);
-                    this.DBLinks = dbLinks;
-                    this.appStatus = "";
-                },
-                'category', undefined, undefined, 
-                firebaseManagerNS.whereClause('category', this.category, 'All')
-            );
+            this.monitorDBLinks();
         },
         mounted() {
         },
         destroyed() {
         },
         computed: {
+            selectedCategory() {
+                return this.categories[this.categorySelectedIndex];
+            },
             message() {
                 return "computed";
             }
