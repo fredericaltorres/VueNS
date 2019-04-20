@@ -8,7 +8,7 @@
 
 			   <Label class="labelInfoTopBar" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
-                        <Span class="fa" text.decode="&#xf05a; "/> <!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
+                        <Span class="fa" text.decode="&#xf05a;  "/> <!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
                         <Span :text="`${DBLinks.length} links - Category: ${this.category} - ${this.appStatus}`"/>
                     </FormattedString>
                 </Label>                
@@ -25,7 +25,7 @@
                     </v-template>
 			    </ListView>
 
-				<Button class="btn btn-primary" text="Category" @tap="onCategoryClick" />
+				<Button class="btn btn-primary" text="Filter By Category" @tap="onCategoryClick" />
 			</StackLayout>
 		</ScrollView>
     </Page>
@@ -38,7 +38,7 @@
     import DBLinkComponent from "./DBLinkComponent.vue";
     import Tracer from '../common/Tracer';
 
-    const APP_TITLE = "dbLinks App";
+    const APP_TITLE = "dbLinks";
     const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
     
     export default {

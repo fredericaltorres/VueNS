@@ -7,14 +7,24 @@
 //    font-family: "FontAwesome";
 // }
 
-$Gray-Background:  rgb(235, 230, 230);
+$Gray-Background:  rgb(199, 192, 192);
 
 .fa {
    font-family: "FontAwesome";
    color: $accent-dark;
    font-size: 25;
 }
+.faSmall {
+   font-family: "FontAwesome";
+   color: $accent-dark;
+   font-size: 18;
+}
 .info {
    font-size: 20;
    height: 30;
+   margin-left: 1;
+}
+.infoSmall {
+   font-size: 15;
+   height: 25;
 }

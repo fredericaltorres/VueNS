@@ -11,42 +11,49 @@
                 <!-- <TextView class="info" :text="getDBLink.description" editable="false" /> -->
 
                 <!-- https://docs.nativescript.org/angular/ui/ng-ui-widgets/formatted-string -->
-                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                <Label class="info" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
                         <Span class="fa" text.decode=" &#xf0c1; "/> <!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
-                        <Span color="#990000" fontAttributes="Bold" :text="getDBLink.description"/>
+                        <Span class="textData" :text="getDBLink.description"/>
                     </FormattedString>
                 </Label>
-                 <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                 <Label class="info" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
-                        <Span text="Link: "/>
-                        <Span color="#990000" fontAttributes="Bold" :text="getDBLink.link"/>
+                        <Span class="textLabel" text="Link: "/>
+                        <Span class="textData" :text="getDBLink.link"/>
                     </FormattedString>
                 </Label>
-                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                <Label class="info" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
-                        <Span text="Category: "/>
-                        <Span color="#990000" fontAttributes="Bold" :text="getDBLink.category"/>
+                        <Span class="textLabel" text="Category: "/>
+                        <Span class="textData" :text="getDBLink.category"/>
                     </FormattedString>
                 </Label>
-                <Label horizontalAlignment="left" verticalAlignment="center">
+                <Label class="info" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
-                        <Span text="Last Updated: "/>
-                        <Span color="#990000" fontAttributes="Bold" :text="this.getDBLinkUpdateAt"/>
+                        <Span class="textLabel" text="Last Updated: "/>
+                        <Span class="textData" :text="this.getDBLinkUpdateAt"/>
                     </FormattedString>
                 </Label> 
 
  <Label text="----------------------------------------" horizontalAlignment="center" />
 
-                <Label horizontalAlignment="left" verticalAlignment="center">
+                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
                     <FormattedString>
-                        <Span text="Files: "/>
-                        <Span color="#990000" fontAttributes="Bold" :text="this.getDBLinkFiles.length"/>
+                        <Span class="textLabel" text="Files: "/>
+                        <Span class="textData" :text="this.getDBLinkFiles.length"/>
                     </FormattedString>
                 </Label>   
 
-                <Label v-for="file in this.getDBLinkFiles" :key="file" :text="file" horizontalAlignment="left" />
-                  
+                <!-- <Label v-for="file in this.getDBLinkFiles" :key="file" :text="file" horizontalAlignment="left" />
+                   -->
+
+                <Label class="infoSmall" v-for="file in this.getDBLinkFiles" :key="file" horizontalAlignment="left" >
+                   <FormattedString>
+                        <Span class="faSmall" text.decode=" &#xf016; "/> <!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
+                        <Span :text="file"/>
+                    </FormattedString>
+                </Label>
             </StackLayout>
         </ScrollView>
     </Page>
@@ -87,12 +94,12 @@ export default {
     @import '../app-common';
     @import './app-component';
 
-    // .info {
-    //     font-size: 20;
-    //     height: 30;
-    // }
-    // .fa {
-    //     color: $accent-dark;
-    //     font-size: 25;
-    // }
+    .textData {
+        color: red;
+        font-weight: normal;
+    }
+    .textLabel {
+        color: black;
+        font-weight: normal;
+    }    
 </style>
