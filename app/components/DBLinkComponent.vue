@@ -20,22 +20,12 @@
                 <ScrollView orientation="horizontal" scrollBarIndicatorVisible="true">
                     <Label class="textData" :text="getDBLink.link" horizontalAlignment="center" verticalAlignment="center"/>
                 </ScrollView>   
-
-                <Label class="textLabel" text.decode="Category" horizontalAlignment="center" verticalAlignment="center"/>
-                <Label class="textData" :text="getDBLink.category" horizontalAlignment="center" verticalAlignment="center"/>
-
-                <Label class="textLabel" text.decode="Last Updated" horizontalAlignment="center" verticalAlignment="center"/>
-                <Label class="textData" :text="this.getDBLinkUpdateAt" horizontalAlignment="center" verticalAlignment="center"/>
-
-                <Label class="textLabel" horizontalAlignment="center" verticalAlignment="center">
-                    <FormattedString>
-                        <Span text="Files: "/>
-                        <Span :text="this.getDBLinkFiles.length"/>
-                    </FormattedString>
-                </Label>   
-
-                 <Label text="----------------------------------------" horizontalAlignment="center" />
-
+              
+                <LabelTextComponent :Label="`Category`" :Text="getDBLink.category"/>
+                <LabelTextComponent :Label="`Last Updated`" :Text="this.getDBLinkUpdateAt"/>
+                <LabelTextComponent v-if="this.getDBLinkFiles.length > 0" :Label="`File` + (this.getDBLinkFiles.length > 1 ? `s`:``)" :Text="this.getDBLinkFiles.length"/>
+         
+                <Label text="----------------------------------------" horizontalAlignment="center" />
 
                 <Label class="infoSmall" v-for="file in this.getDBLinkFiles" :key="file" horizontalAlignment="left" >
                    <FormattedString>
@@ -43,8 +33,13 @@
                         <Span :text="file"/>
                     </FormattedString>
                 </Label>
+
+                <!-- <HtmlView html="<div><h1>HtmlView</h1></div>" /> -->
+
+                <Button  class="btn btn-primary" text="Open Link" @tap="openLink" />
             </StackLayout>
         </ScrollView>
+    </Page>
     </Page>
 </template>
 
@@ -52,6 +47,7 @@
 
 import Tracer from '../common/Tracer';
 import TypeDefUtil from '../common/TypeDefUtil';
+import LabelTextComponent from './LabelTextComponent';
 
 export default {
     props: ["dbLink"],
@@ -63,6 +59,14 @@ export default {
     mounted() {
     },
     created() {
+    },
+    components: {
+        LabelTextComponent
+    },
+    methods:{
+        openLink() {
+            Tracer.log(`Open link ${this.getDBLink.link}`);
+        }
     },
     computed: {
         getDBLink() {
