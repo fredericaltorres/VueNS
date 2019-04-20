@@ -6,47 +6,36 @@
 
         <ScrollView>
             <StackLayout>
+              
+                <ScrollView orientation="horizontal" scrollBarIndicatorVisible="true">
+                    <Label style="height:50;" class="info textData" horizontalAlignment="center" verticalAlignment="center">
+                        <FormattedString>
+                            <Span class="fa" text.decode=" &#xf0c1; "/> 
+                            <Span class="textData" :text="getDBLink.description"/>
+                        </FormattedString>
+                    </Label>
+                </ScrollView>   
+            
+                <Label class="textLabel" text.decode="Link" horizontalAlignment="center" verticalAlignment="center"/>
+                <ScrollView orientation="horizontal" scrollBarIndicatorVisible="true">
+                    <Label class="textData" :text="getDBLink.link" horizontalAlignment="center" verticalAlignment="center"/>
+                </ScrollView>   
 
-                <!-- https://nativescript-vue.org/en/docs/elements/components/text-view/ -->
-                <!-- <TextView class="info" :text="getDBLink.description" editable="false" /> -->
+                <Label class="textLabel" text.decode="Category" horizontalAlignment="center" verticalAlignment="center"/>
+                <Label class="textData" :text="getDBLink.category" horizontalAlignment="center" verticalAlignment="center"/>
 
-                <!-- https://docs.nativescript.org/angular/ui/ng-ui-widgets/formatted-string -->
-                <Label class="info" horizontalAlignment="center" verticalAlignment="center">
-                    <FormattedString>
-                        <Span class="fa" text.decode=" &#xf0c1; "/> <!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
-                        <Span class="textData" :text="getDBLink.description"/>
-                    </FormattedString>
-                </Label>
-                 <Label class="info" horizontalAlignment="center" verticalAlignment="center">
-                    <FormattedString>
-                        <Span class="textLabel" text="Link: "/>
-                        <Span class="textData" :text="getDBLink.link"/>
-                    </FormattedString>
-                </Label>
-                <Label class="info" horizontalAlignment="center" verticalAlignment="center">
-                    <FormattedString>
-                        <Span class="textLabel" text="Category: "/>
-                        <Span class="textData" :text="getDBLink.category"/>
-                    </FormattedString>
-                </Label>
-                <Label class="info" horizontalAlignment="center" verticalAlignment="center">
-                    <FormattedString>
-                        <Span class="textLabel" text="Last Updated: "/>
-                        <Span class="textData" :text="this.getDBLinkUpdateAt"/>
-                    </FormattedString>
-                </Label> 
+                <Label class="textLabel" text.decode="Last Updated" horizontalAlignment="center" verticalAlignment="center"/>
+                <Label class="textData" :text="this.getDBLinkUpdateAt" horizontalAlignment="center" verticalAlignment="center"/>
 
- <Label text="----------------------------------------" horizontalAlignment="center" />
-
-                <Label class="info" horizontalAlignment="left" verticalAlignment="center">
+                <Label class="textLabel" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
-                        <Span class="textLabel" text="Files: "/>
-                        <Span class="textData" :text="this.getDBLinkFiles.length"/>
+                        <Span text="Files: "/>
+                        <Span :text="this.getDBLinkFiles.length"/>
                     </FormattedString>
                 </Label>   
 
-                <!-- <Label v-for="file in this.getDBLinkFiles" :key="file" :text="file" horizontalAlignment="left" />
-                   -->
+                 <Label text="----------------------------------------" horizontalAlignment="center" />
+
 
                 <Label class="infoSmall" v-for="file in this.getDBLinkFiles" :key="file" horizontalAlignment="left" >
                    <FormattedString>
@@ -95,8 +84,9 @@ export default {
     @import './app-component';
 
     .textData {
-        color: red;
+        color: $accent;
         font-weight: normal;
+        padding-bottom: 10;
     }
     .textLabel {
         color: black;

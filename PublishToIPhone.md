@@ -1,5 +1,3 @@
-
-
 # Information about publishing a NativeScript Vue app to my iPhone
 
 - Reference Video: https://www.youtube.com/watch?v=5gKuR2UCOnM

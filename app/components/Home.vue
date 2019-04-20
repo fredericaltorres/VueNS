@@ -25,7 +25,7 @@
                     </v-template>
 			    </ListView>
 
-				<Button class="btn btn-primary" text="Filter By Category" @tap="onCategoryClick" />
+				<Button :isEnabled="!this.isBusy" class="btn btn-primary" text="Filter By Category" @tap="onCategoryClick" />
 			</StackLayout>
 		</ScrollView>
     </Page>
@@ -38,15 +38,21 @@
     import DBLinkComponent from "./DBLinkComponent.vue";
     import Tracer from '../common/Tracer';
 
+    const AppStatus = {
+        Busy : 'Loading...',
+        Ready : 'Ready'
+    }
+
     const APP_TITLE = "dbLinks";
     const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
+    const CANCEL_OPTION = "Cancel";
     
     export default {
         data() {
             return {
                 name:'Home.vue',
                 appTitle : APP_TITLE,
-                appStatus: "Loading...",
+                appStatus: AppStatus.Busy,
                 showMore: true,
                 DBLinks:[],
                 category: 'All',
@@ -59,18 +65,19 @@
         methods: {
             setAppStatus({ busy }) {
                 if(busy) {
-                    this.appStatus = "Loading...";
+                    this.appStatus = AppStatus.Busy;
                 }
                 else {
-                    this.appStatus = "Ready";
+                    this.appStatus = AppStatus.Ready;
                 }
             },
             onCategoryClick() {
-                action("Select a category", "Cancel", this.categories)
+                action("Select a category", CANCEL_OPTION, this.categories)
                 .then(selectedCategory => {
-                    this.category = selectedCategory;
-                    Tracer.log(`category:${this.category}`, this);
-                    this.monitorDBLinks();
+                    if(selectedCategory !== CANCEL_OPTION) {
+                        this.category = selectedCategory;
+                        this.monitorDBLinks();
+                    }
                 });
             },
             onItemTap(args) {
@@ -79,6 +86,7 @@
                 this.$navigateTo(DBLinkComponent, { props: { dbLink: dbLink } });  // https://docs.nativescript.org/core-concepts/navigation
             },
             monitorDBLinks() {
+                Tracer.log(`Start loading dbLink category:${this.category}`, this);
                 this.setAppStatus({ busy: true });
                 const DBLinksCollectionName = 'DBLinks';
                 firebaseManagerNS.monitorQuery(
@@ -87,10 +95,12 @@
                         Tracer.log(`Collection ${DBLinksCollectionName} change detected, ${dbLinks.length} record(s)`, this);
                         this.DBLinks = dbLinks;
                         this.setAppStatus({ busy: false });
+                        Tracer.log(`End loading dbLink category:${this.category}`, this);
                     },
                     'category', undefined, undefined, 
                     firebaseManagerNS.whereClause('category', this.selectedCategory, 'All')
                 );
+                Tracer.log(`Start2 loading dbLink category:${this.category}`, this);
             }
         },
         created() {
@@ -101,6 +111,9 @@
         destroyed() {
         },
         computed: {
+            isBusy () {
+                return this.appStatus === AppStatus.Busy;
+            },
             selectedCategory() {
                 return this.category;
             },
