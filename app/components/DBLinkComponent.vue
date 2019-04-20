@@ -1,4 +1,4 @@
-        <template>
+<template>
     <Page class="page">
         <ActionBar class="action-bar">
             <Label class="action-bar-title" :text="getDBLink.description" horizontalAlignment="center" />
@@ -10,6 +10,7 @@
                 <!-- https://docs.nativescript.org/angular/ui/ng-ui-widgets/formatted-string -->
                 <Label class="info" horizontalAlignment="left" verticalAlignment="center">
                     <FormattedString>
+                        <Span class="fa" text.decode=" &#xf0c1; "/> <!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
                         <Span color="#990000" fontAttributes="Bold" :text="getDBLink.description"/>
                     </FormattedString>
                 </Label>
@@ -31,7 +32,6 @@
                         <Span color="#990000" fontAttributes="Bold" :text="this.getDBLinkUpdateAt"/>
                     </FormattedString>
                 </Label> 
-
 
  <Label text="---------------------------------------------" horizontalAlignment="center" />
 
@@ -84,5 +84,9 @@ export default {
     .info {
         font-size: 20;
         height: 30;
+    }
+    .fa {
+        color: $accent-dark;
+        font-size: 25;
     }
 </style>
