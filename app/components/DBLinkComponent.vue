@@ -7,6 +7,9 @@
         <ScrollView>
             <StackLayout>
 
+                <!-- https://nativescript-vue.org/en/docs/elements/components/text-view/ -->
+                <!-- <TextView class="info" :text="getDBLink.description" editable="false" /> -->
+
                 <!-- https://docs.nativescript.org/angular/ui/ng-ui-widgets/formatted-string -->
                 <Label class="info" horizontalAlignment="left" verticalAlignment="center">
                     <FormattedString>
@@ -33,7 +36,7 @@
                     </FormattedString>
                 </Label> 
 
- <Label text="---------------------------------------------" horizontalAlignment="center" />
+ <Label text="----------------------------------------" horizontalAlignment="center" />
 
                 <Label horizontalAlignment="left" verticalAlignment="center">
                     <FormattedString>
@@ -81,12 +84,15 @@ export default {
 
 <style scoped lang="scss">
     @import '../app-variables';
-    .info {
-        font-size: 20;
-        height: 30;
-    }
-    .fa {
-        color: $accent-dark;
-        font-size: 25;
-    }
+    @import '../app-common';
+    @import './app-component';
+
+    // .info {
+    //     font-size: 20;
+    //     height: 30;
+    // }
+    // .fa {
+    //     color: $accent-dark;
+    //     font-size: 25;
+    // }
 </style>

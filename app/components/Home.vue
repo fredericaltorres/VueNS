@@ -6,13 +6,6 @@
 		<ScrollView>
 			<StackLayout class="home-panel">
 
-                <!-- https://nativescript-vue.org/en/docs/elements/components/list-picker/ -->
-                <!-- <ListPicker id="categoryListPicker" 
-                    :items="this.categories" 
-                    :selectedIndex="this.categorySelectedIndex" class="p-15 picker" row="1"
-                    @selectedIndexChange="categoryListPicker_selectedIndexChange"
-                /> -->
-
 			   <Label class="labelInfoTopBar" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
                         <Span class="fa" text.decode="&#xf05a; "/> <!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
@@ -25,11 +18,7 @@
                         <!-- https://docs.nativescript.org/ui/layouts/layout-containers -->
                         <GridLayout class="list-group-item" rows="auto,*" columns="auto,*">
 
-                            <!-- <Image rowSpan="2" left="2" height="50" row="0" col="0" src="~/images/i.png" class="listView-Image" />
-                             -->
-                             
                             <Label rowSpan="2" row="0" col="0" class="fa" text.decode=" &#xf0c1; "/><!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
-
                             <Label class="listView-Item-Title" row="0" col="1" :text="` ${dbLink.description}`" /> 
                             <Label class="listView-Item-Description" row="1" col="1" :text="` ${dbLink.category}, ${Object.values(dbLink.files).length} file(s)`" />
                         </GridLayout>
@@ -68,11 +57,6 @@
             DBLinkComponent
         },
         methods: {
-            // categoryListPicker_selectedIndexChange(picker) {
-            //     this.categorySelectedIndex = picker.object.selectedIndex;
-            //     Tracer.log(`categoryListPicker_selectedIndexChange:${this.selectedCategory}`);
-            //     this.monitorDBLinks();
-            // },
             setAppStatus({ busy }) {
                 if(busy) {
                     this.appStatus = "Loading...";
@@ -125,39 +109,22 @@
             }
         }
     };
-
-
- 
-        //    fetch(repoUrl).then(response => response.json()).then(repoArray => {
-        //        console.log(`${repoArray.length} repository found`);
-        //        this.repository = repoArray;
-        //        this.appStatus = "Rdy";
-        //        console.log(`Loaded data ${new Date()}`);
-        //    });   
 </script>
 
 <style scoped lang="scss">
-    // Start custom common variables
     @import '../app-variables';
-    // End custom common variables
-
-    // Custom styles
+    @import '../app-common';
+    @import './app-component';
 
     .labelInfoTopBar {
         padding-left: 6;
         padding-right: 6;
         padding-bottom: 6;
         padding-top: 6;  
-        background-color: rgb(235, 230, 230);   
+        background-color: $Gray-Background;   
         width: 100%; 
     }
-    .fa {
-        color: $accent-dark;
-        font-size: 25;
-    }
-    .info {
-        font-size: 20;
-    }
+
     .btn {
         font-size: 20;
         font-weight: bold;

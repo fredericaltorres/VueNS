@@ -3,6 +3,18 @@
 
 
 //Font icon
+// .fa {
+//    font-family: "FontAwesome";
+// }
+
+$Gray-Background:  rgb(235, 230, 230);
+
 .fa {
    font-family: "FontAwesome";
+   color: $accent-dark;
+   font-size: 25;
+}
+.info {
+   font-size: 20;
+   height: 30;
 }
