@@ -15,12 +15,8 @@
                         </FormattedString>
                     </Label>
                 </ScrollView>   
-            
-                <Label class="textLabel" text.decode="Link" horizontalAlignment="center" verticalAlignment="center"/>
-                <ScrollView orientation="horizontal" scrollBarIndicatorVisible="true">
-                    <Label class="textData" :text="getDBLink.link" horizontalAlignment="center" verticalAlignment="center"/>
-                </ScrollView>   
-              
+
+                <LabelTextComponent :Label="`Link`" :Text="getDBLink.link" :ScrollHorizontally="true"/>
                 <LabelTextComponent :Label="`Category`" :Text="getDBLink.category"/>
                 <LabelTextComponent :Label="`Last Updated`" :Text="this.getDBLinkUpdateAt"/>
                 <LabelTextComponent v-if="this.getDBLinkFiles.length > 0" :Label="`File` + (this.getDBLinkFiles.length > 1 ? `s`:``)" :Text="this.getDBLinkFiles.length"/>
@@ -34,9 +30,7 @@
                     </FormattedString>
                 </Label>
 
-                <!-- <HtmlView html="<div><h1>HtmlView</h1></div>" /> -->
-
-                <Button  class="btn btn-primary" text="Open Link" @tap="openLink" />
+                <Button style="font-weight: bold; font-size:20;" class="btn btn-primary" text="Open Link" @tap="openLink" />
             </StackLayout>
         </ScrollView>
     </Page>

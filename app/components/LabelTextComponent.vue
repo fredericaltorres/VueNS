@@ -1,7 +1,13 @@
 <template>
     <StackLayout>
         <Label v-if="this.isLabelDefined" class="textLabel" :text="this.Label" horizontalAlignment="center" verticalAlignment="center"/>
-        <Label class="textData"  :text="this.Text" horizontalAlignment="center" verticalAlignment="center"/>
+        
+        <Label v-if="!this.ScrollHorizontally" class="textData"  :text="this.Text" horizontalAlignment="center" verticalAlignment="center"/>
+    
+        <ScrollView v-if="this.ScrollHorizontally" orientation="horizontal" scrollBarIndicatorVisible="true">
+             <Label class="textData"  :text="this.Text" horizontalAlignment="center" verticalAlignment="center"/>
+        </ScrollView>
+    
     </StackLayout>
 </template>
 
@@ -10,7 +16,18 @@
 import Tracer from '../common/Tracer';
 
 export default {
-    props: ["Label", "Text"],
+    props : { // https://vuejs.org/v2/guide/components-props.html
+        Label: {
+            type:String
+        },
+        Text: {
+            type:String
+        },
+        ScrollHorizontally : {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
             name:'LabelTextComponent.vue'
