@@ -86,15 +86,23 @@
                 });
             },
             onActionsClick() {
-                action("Select an actions", CANCEL_OPTION, this.getAuthorizedUserActions())
+                action("Select an actions", CANCEL_OPTION, this.authorizedUserActions)
                 .then(selectedAction => {
                     if(selectedAction !== CANCEL_OPTION) {
+                        Tracer.log(`User action:${selectedAction}`, this);
                         switch(selectedAction) {
                             case 'Log In' : 
                                 firebaseManagerNS.usernamePasswordLogin('fredericaltorres2@gmail.com', 'abcd1234')
                                 .then(() => { 
                                     this.loggedInUser = firebaseManagerNS.getCurrentUserDisplayName();
                                     Tracer.log(`Main app notified of log in user:${this.loggedInUser}`);
+                                });
+                            break;
+                            case 'Log Out' : 
+                                firebaseManagerNS.logOut()
+                                .then(() => { 
+                                    this.loggedInUser = null;
+                                    Tracer.log(`Main app notified of log out user:${this.loggedInUser}`);
                                 });
                             break;
                         }
@@ -144,9 +152,9 @@
             isUserAuthenticated () {
                 return this.loggedInUser !== null;
             },
-            getAuthorizedUserActions() {
+            authorizedUserActions() {
                 const actions = [];
-                if(isUserAuthenticated) {
+                if(this.isUserAuthenticated) {
                     actions.push('Log Out');
                     actions.push('New');
                 }

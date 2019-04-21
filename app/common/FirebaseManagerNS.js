@@ -237,6 +237,22 @@ class FirebaseManagerNS {
         });
         return true;
     }    
+        
+    // TODO: UPDATE
+	logOut() {
+
+        this._currentUserAuthAuth = null;
+        
+        if(this._nativeScriptRunTime) {
+            firebase.logout();
+            return Promise.resolve();        
+        }
+        else {
+            return firebaseWebApi.auth().signOut()
+                .then(() => console.log("Logout OK"))
+                .catch(error => console.log("Logout error: " + JSON.stringify(error)));
+        }
+	}
 
     // https://firebase.google.com/docs/auth/web/manage-users?authuser=0
     // https://github.com/eddyverbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#google-sign-in
