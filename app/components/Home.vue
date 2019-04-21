@@ -1,7 +1,7 @@
 <template>
     <Page class="page">
         <ActionBar class="action-bar">
-            <Label class="action-bar-title" :text="`${this.appTitle}`"></Label>
+            <Label class="action-bar-title" :text="`${this.appTitle + ( this.loggedInUser ? ' - '+this.loggedInUser : '')}`"></Label>
         </ActionBar>
 		<ScrollView>
 			<StackLayout class="home-panel">
@@ -61,6 +61,7 @@
                 DBLinks:[],
                 category: 'All',
                 categories: [`All`,`Hardware`,`Software`,`Other`],
+                loggedInUser: null,
             }
         },
         components: {
@@ -92,7 +93,8 @@
                             case 'Login' : 
                                 firebaseManagerNS.usernamePasswordLogin('fredericaltorres2@gmail.com', 'abcd1234')
                                 .then(() => { 
-                                    Tracer.log(`Main app notified of log in user:${firebaseManagerNS.getCurrentUserDisplayName()}`);
+                                    this.loggedInUser = firebaseManagerNS.getCurrentUserDisplayName();
+                                    Tracer.log(`Main app notified of log in user:${this.loggedInUser}`);
                                 });
                             break;
                         }
