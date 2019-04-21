@@ -13,7 +13,7 @@
                     </FormattedString>
                 </Label>                
 
-                <ListView for="dbLink in DBLinks" @itemTap="onItemTap" left="2" top="2" height="400" width="100%" >
+                <ListView for="dbLink in DBLinks" @itemTap="onDBLinkSelectedInListView" left="2" top="2" height="400" width="100%" >
                     <v-template>
                         <!-- https://docs.nativescript.org/ui/layouts/layout-containers -->
                         <GridLayout class="list-group-item" rows="auto,*" columns="auto,*">
@@ -25,8 +25,12 @@
                     </v-template>
 			    </ListView>
 
-				<Button :isEnabled="!this.isBusy" class="btn btn-primary" text="Filter By Category" @tap="onCategoryClick" />
-			</StackLayout>
+                <GridLayout columns="*,*" rows="auto">
+          
+                    <Button row="0" col="0" :isEnabled="!this.isBusy" class="btn btn-primary" text="Category" @tap="onCategoryClick" />
+                    <Button row="0" col="1" :isEnabled="!this.isBusy" class="btn btn-primary" text="Actions" @tap="onActionsClick" />
+                </GridLayout>
+            </StackLayout>
 		</ScrollView>
     </Page>
 </template>
@@ -80,7 +84,19 @@
                     }
                 });
             },
-            onItemTap(args) {
+            onActionsClick() {
+                action("Select an actions", CANCEL_OPTION, ['Login','New'])
+                .then(selectedAction => {
+                    if(selectedAction !== CANCEL_OPTION) {
+                        switch(selectedAction) {
+                            case 'Login' : 
+                                firebaseManagerNS.usernamePasswordLogin('fredericaltorres2@gmail.com', 'abcd1234');
+                            break;
+                        }
+                    }
+                });
+            },            
+            onDBLinkSelectedInListView(args) {
                 const dbLink = this.DBLinks[args.index];
                 Tracer.log(`OPEN dbLink:${dbLink.description}`,this);
                 this.$navigateTo(DBLinkComponent, { props: { dbLink: dbLink } });  // https://docs.nativescript.org/core-concepts/navigation

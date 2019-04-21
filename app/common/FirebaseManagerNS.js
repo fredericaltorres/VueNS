@@ -15,16 +15,31 @@ class FirebaseManagerNS {
 
     // static _initialized = false;
 	
-    constructor() {
+    constructor(nativeScriptRunTime = false) {
 
         Tracer.coloredConsole = false;
         this.name = "FirestoreManager";
         Tracer.log(`FirebaseManagerNS constructor`, this);
+        this._nativeScriptRunTime = nativeScriptRunTime;
         this._monitoredSnapshot = {};
         this._settings = getSettings();
-        firebase.init({ persist: false }).then(
+        this.batchModeOn = false;
+		this._currentUserAuthAuth = null;
+        this.onCurrentUserLoadedCallBack = null;
+        this._nativeScriptUser = null;
+        
+        firebase.init({ 
+            persist: false,
+            // onAuthStateChanged: function(data) { // optional but useful to immediately re-logon the user when he re-visits your app
+            //     console.log(data.loggedIn ? "Logged in to firebase" : "Logged out from firebase");
+            //     if (data.loggedIn) {
+            //       console.log("user's email address: " + (data.user.email ? data.user.email : "N/A"));
+            //     }
+            //   } 
+        }).then(
             instance => {
                 Tracer.log("firebase.init done ", this);
+                this.__setUpOnAuthStateChanged();
             },
             error => {
                 Tracer.log(`firebase.init -> error: ${error}`, this);
@@ -32,6 +47,93 @@ class FirebaseManagerNS {
         );
     }
 
+    __setUpOnAuthStateChanged () {
+
+        // TODO: UPDATE
+		firebase.auth().onAuthStateChanged(this.__onNewUserAuthenticated);
+    }    
+    
+    // TODO: UPDATE
+    __onNewUserAuthenticated (user) {
+
+        Tracer.log(`__onNewUserAuthenticated `, this);
+
+        if (user) {
+            if (user == null) {
+                this._currentUserAuthAuth = null;
+                if(this.onCurrentUserLoadedCallBack)
+                    this.onCurrentUserLoadedCallBack(null);					
+            }
+            else {
+                // let name = user.displayName;
+                // let email = user.email;
+                // let photoUrl = user.photoURL;
+                // let emailVerified = user.emailVerified;
+                // let uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
+                // 				 // this value to authenticate with your backend server, if
+                // 				 // you have one. Use User.getToken() instead.
+
+                // TODO: UPDATE
+                Tracer.log(`FirestoreManager currentUser:${this.getCurrentUserEmail()}, udi:${this.getCurrentUserUID()}`, this);
+
+                // https://firebase.google.com/docs/reference/js/firebase.User#getIdToken
+                // this.getCurrentUser().getIdToken().then(data => alert(data));
+
+                if(this.onCurrentUserLoadedCallBack)
+                    this.onCurrentUserLoadedCallBack(this.getCurrentUser());
+            }
+        } else {
+            console.log('No user change or log out');
+            this._currentUserAuthAuth = null;
+            if(this.onCurrentUserLoadedCallBack)
+                this.onCurrentUserLoadedCallBack(null);
+        }
+    }  
+
+	// https://grokonez.com/android/firebase-authentication-sign-up-sign-in-sign-out-verify-email-android
+    // TODO: UPDATE
+    getCurrentUser() {
+        if(this._nativeScriptRunTime)
+            return this._nativeScriptUser;
+        else 
+            return firebase.auth().currentUser;
+    }
+    
+    isCurrentUserLoaded() {
+
+		return this.getCurrentUser() !== null;
+	}
+
+	getCurrentUserUID() {
+
+		return this.__getCurrentUserProperty("uid");
+	}
+
+	getCurrentUserDisplayName() {
+
+		return this.__getCurrentUserProperty("displayName");
+	}
+
+	getCurrentUserEmail() {
+
+		return this.__getCurrentUserProperty("email");
+	}
+
+	__getCurrentUserProperty(prop) {
+
+        // TODO: UPDATE
+        const currentUser = this.getCurrentUser();
+        Tracer.log(`__getCurrentUserProperty ${prop}, ${JSON.stringify(currentUser)}`);
+        
+        if(this._nativeScriptRunTime) {
+            return currentUser[prop];
+        }
+        else {
+            if(currentUser)
+			    return currentUser.providerData[0][prop];
+        }
+		return null;			
+	}
 
     getFirestoreDB() {
 
@@ -88,6 +190,7 @@ class FirebaseManagerNS {
 			return null;
 		return { property, operator, value };
     }
+
     // https://firebase.google.com/docs/database/web/lists-of-data
     // https://firebase.google.com/docs/firestore/query-data/listen
     monitorQuery(
@@ -131,6 +234,46 @@ class FirebaseManagerNS {
         });
         return true;
     }    
+
+    // https://firebase.google.com/docs/auth/web/manage-users?authuser=0
+    // https://github.com/eddyverbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#google-sign-in
+	usernamePasswordLogin(email, password) {
+        Tracer.log(`usernamePasswordLogin A`, this);
+        const $this = this;
+
+        firebase.login(
+            {
+              type: firebase.LoginType.PASSWORD,
+              passwordOptions: {
+                email: email,
+                password: password,
+              }
+            })
+            .then(user => {
+                const s = JSON.stringify(user);
+                Tracer.log(`usernamePasswordLogin user:${s}`, $this);
+                this._nativeScriptUser = user;
+                this.__onNewUserAuthenticated(user);
+            })
+            .catch(error => console.log(error));
+
+        // firebase.login({
+        //     type: firebase.LoginType.GOOGLE,
+        //     // Optional //
+        //     googleOptions: {
+        //       hostedDomain: "mygsuitedomain.com"
+        //     }
+        //   }).then(
+        //       function (result) {
+        //         Tracer.log(`googleLogin B`);
+        //         JSON.stringify(result);
+        //       },
+        //       function (errorMessage) {
+        //         Tracer.log(`googleLogin C`);
+        //         console.log(errorMessage);
+        //       }
+        //   );
+	}	    
 }
 
-export default new FirebaseManagerNS()
+export default new FirebaseManagerNS(true);

@@ -34,7 +34,6 @@
             </StackLayout>
         </ScrollView>
     </Page>
-    </Page>
 </template>
 
 <script>
@@ -42,6 +41,7 @@
 import Tracer from '../common/Tracer';
 import TypeDefUtil from '../common/TypeDefUtil';
 import LabelTextComponent from './LabelTextComponent';
+import WebViewer from './WebViewer';
 
 export default {
     props: ["dbLink"],
@@ -55,11 +55,13 @@ export default {
     created() {
     },
     components: {
-        LabelTextComponent
+        LabelTextComponent,
+        WebViewer
     },
     methods:{
         openLink() {
             Tracer.log(`Open link ${this.getDBLink.link}`);
+            this.$navigateTo(WebViewer, { props: { Url: this.getDBLink.link , Title: this.getDBLink.description } });  // https://docs.nativescript.org/core-concepts/navigation
         }
     },
     computed: {

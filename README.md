@@ -9,3 +9,10 @@
 
 # Deploy to iPhone
 - [Deploy](./PublishToIPhone.md)
+
+# Firebase Database Connection
+- [Add Firebase to your iOS Project](https://firebase.google.com/docs/ios/setup)
+
+# Firebase Auth
+file /Users/fredericaltorres/DVT/VueNS/platforms/ios/Podfile
+Un comment: pod 'GoogleSignIn'
