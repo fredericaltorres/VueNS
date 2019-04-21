@@ -1,4 +1,3 @@
-// import React from "react";
 import Tracer from './Tracer';
 import moment from "moment"; // http://momentjs.com/
 import TypeUtil from '../common/TypeUtil';
@@ -94,25 +93,6 @@ class TypeDefUtil {
 		const s = m.format(format);
 		return s;
 	}
-
-	// renderEditControlsJsx(typeDef, entity) {
-
-	// 	const l = [];
-	// 	this.getTypeDefProperties(typeDef).forEach((property, index) => {
-			
-	// 		let v = entity[property];
-	// 		const expectedType = typeDef[property];
-	// 		if(expectedType === FIRESTORE_TIMESTAMP) {
-	// 			v = this.formatFirebaseTimestamp(v);
-	// 		}
-	// 		l.push(
-	// 			<div key={`key_${property}`}>
-	// 				{property} : {v} <br/>
-	// 			</div>
-	// 		);
-	// 	});
-	// 	return l;
-	// }
 }
 
 export default new TypeDefUtil();
