@@ -111,7 +111,10 @@ class FirebaseManagerNS {
 
 	getCurrentUserDisplayName() {
 
-		return this.__getCurrentUserProperty("displayName");
+        var r = this.__getCurrentUserProperty("displayName");
+        if(!r) {
+            return this.getCurrentUserEmail();
+        }
 	}
 
 	getCurrentUserEmail() {
@@ -123,14 +126,16 @@ class FirebaseManagerNS {
 
         // TODO: UPDATE
         const currentUser = this.getCurrentUser();
-        if(this._nativeScriptRunTime) {
-            return currentUser[prop];
+        if(currentUser) {
+            if(this._nativeScriptRunTime) {
+                return currentUser[prop];
+            }
+            else {
+                return currentUser.providerData[0][prop];
+            }
         }
-        else {
-            if(currentUser)
-			    return currentUser.providerData[0][prop];
-        }
-		return null;			
+        Tracer.warn(`currentUser not defined yet, cannot get ${prop}`, this);		
+        return null;	
 	}
 
     getFirestoreDB() {
