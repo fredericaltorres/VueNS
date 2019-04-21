@@ -3,7 +3,6 @@
         <ActionBar class="action-bar">
             <Label class="action-bar-title" :text="this.Title" horizontalAlignment="center" />
         </ActionBar>
-
         <ScrollView>
             <WebView :src="this.Url" />
         </ScrollView>
@@ -34,7 +33,7 @@ export default {
     mounted() {
     },
     created() {
-        Tracer.log(`loaded ${this.Url}`, this);
+        Tracer.log(`loading ${this.Url}`, this);
     },
     methods:{
     },

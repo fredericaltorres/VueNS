@@ -96,6 +96,10 @@
                                 .then(() => { 
                                     this.loggedInUser = firebaseManagerNS.getCurrentUserDisplayName();
                                     Tracer.log(`Main app notified of log in user:${this.loggedInUser}`);
+                                    firebaseManagerNS.currentUserHasRole(`administrator`)
+                                    .then((hasRole) => {
+                                        Tracer.log(`has role Admin:${hasRole}`);
+                                    });
                                 });
                             break;
                             case 'Log Out' : 
@@ -156,11 +160,16 @@
                 const actions = [];
                 if(this.isUserAuthenticated) {
                     actions.push('Log Out');
-                    actions.push('New');
+                    if(this.isAdministrator)
+                        actions.push('New');
                 }
-                else
+                else {
                     actions.push('Log In');
+                }
                 return actions;
+            },
+            isAdministrator() {
+                return firebaseManagerNS.getCurrentUserLoadedIsAdmin();
             }
         }
     };

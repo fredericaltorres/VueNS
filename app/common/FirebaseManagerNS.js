@@ -1,6 +1,7 @@
 import Vue from "nativescript-vue";
 import firebase from "nativescript-plugin-firebase";
 import Tracer from './Tracer';
+import TypeUtil from './TypeUtil';
 
 const DEFAULT_MAX_RECORD = 400;
 const DEFAULT_ID_FIELD_NAME = "id";
@@ -13,11 +14,12 @@ const getSettings = () => {
 
 class FirebaseManagerNS {
 
-    // static _initialized = false;
+    // static _initialized = false; // TODO: UPDATE remove the static field
 	
     constructor(nativeScriptRunTime = false) {
 
         Tracer.coloredConsole = false;
+        this.ADMIN_ROLE = "administrator";
         this.name = "FirestoreManager";
         Tracer.log(`FirebaseManagerNS constructor`, this);
         this._nativeScriptRunTime = nativeScriptRunTime;
@@ -26,8 +28,9 @@ class FirebaseManagerNS {
         this.batchModeOn = false;
 		this._currentUserAuthAuth = null;
         this.onCurrentUserLoadedCallBack = null;
-        this._nativeScriptUser = null;
+        this._nativeScriptUser = null; // TODO: UPDATE
         
+        // https://github.com/eddyverbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#email-password-login
         firebase.init({ 
             persist: false,
             // onAuthStateChanged: function(data) { // optional but useful to immediately re-logon the user when he re-visits your app
@@ -257,9 +260,10 @@ class FirebaseManagerNS {
     // https://firebase.google.com/docs/auth/web/manage-users?authuser=0
     // https://github.com/eddyverbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#google-sign-in
 	usernamePasswordLogin(email, password) {
-        Tracer.log(`usernamePasswordLogin A`, this);
+        Tracer.log(`usernamePasswordLogin`, this);
         const $this = this;
 
+        if(this._nativeScriptRunTime) {
         return firebase.login(
             {
               type: firebase.LoginType.PASSWORD,
@@ -275,7 +279,10 @@ class FirebaseManagerNS {
                 this.__onNewUserAuthenticated(user);
             })
             .catch(error => console.log(error));
-
+        }
+        else {
+            throw "usernamePasswordLogin() not implemented for browser mode"
+        }
         // firebase.login({
         //     type: firebase.LoginType.GOOGLE,
         //     // Optional //
@@ -292,7 +299,108 @@ class FirebaseManagerNS {
         //         console.log(errorMessage);
         //       }
         //   );
-	}	    
+    }	
+    
+    // Return a promise
+	__loadUserAuthAuth(uid) {
+
+		return this.loadDocument('_users', uid, null, false);
+    }
+
+    // If the current user auth auth record is not loaded then load it first, the return the
+	// answer in a promise
+	currentUserHasRole(role) {
+
+		return new Promise((resolve, reject) => {
+
+			if(this._currentUserAuthAuth === null) {
+
+				this.__loadUserAuthAuth( this.getCurrentUserUID() ).then( (currentUserAuthAuth) => {
+
+					if(currentUserAuthAuth === null) { // current record in _users collection was not found
+						
+						resolve(false);
+					}
+					else {
+
+						this._currentUserAuthAuth = currentUserAuthAuth;
+						resolve(this.__currentUserHasRole(role));
+					}
+				});
+			}
+			else {
+				resolve(this.__currentUserHasRole(role));
+			}
+		});
+	}
+
+	__currentUserHasRole(role) { // TODO: UPDATE ALL FUNCTION
+
+		if(!this._currentUserAuthAuth) { // TODO: UPDATE
+            Tracer.warn(`__currentUserHasRole() was called, but the variable _currentUserAuthAuth was not loaded with roles`);
+            return false;
+        }
+        const r = this._currentUserAuthAuth.roles.indexOf(role) !== -1;
+        Tracer.log(`__currentUserHasRole(${role}) : ${r}`, this);
+        return r;
+	}
+
+	// return true if the current user already loaded is an admin.
+	// if the user is not loaded, there is no call to load the user auth auth data
+	getCurrentUserLoadedIsAdmin() {
+
+		return this.__currentUserHasRole(this.ADMIN_ROLE);		
+	}    
+
+    loadDocument(collection, documentId, subCollections = null, expectDocumentToExist = true) {
+
+		Tracer.log(`loadDocument(${collection}, ${documentId})`, this);
+		return new Promise((resolve, reject) => {
+			
+			const docRef = this.getCollection(collection).doc(documentId);
+			docRef.get()
+				.then(doc => {
+
+					const item = this.__rebuildDocument(doc);
+
+					if(item === null) { // document was not found
+
+						if(expectDocumentToExist) 
+							Tracer.throw(`loadDocument(${collection}, ${documentId}) failed`);
+						else
+							resolve(null); // return null to notify caller that document was not found and it was expected
+					}
+
+					if(TypeUtil.isArray(subCollections)) {  // Load sub collections
+
+						const promises = [];
+
+						subCollections.forEach((subCol) => {
+
+							const subColQuery = `${item.id}/${subCol}`;
+							Tracer.log(`loadDocument(${collection}, ${documentId}, SubCollection:(${subColQuery}) )`, this);
+							promises.push(this.loadDocuments(subColQuery, null, null, DEFAULT_MAX_RECORD, subCol));
+						});
+						Promise.all(promises).then((results) => {
+
+							results.forEach((result) => {
+
+								const key = Object.keys(result)[0];
+								const val = result[key];
+								item[key] = val;
+							});
+							resolve(item);
+						});
+					}
+					else {
+						resolve(item);
+					}
+				})
+				.catch((err) => { // We do not expect this catch to trigger
+					Tracer.throw(`loadDocument(${collection}, ${documentId}) failed unexpected error:${err}`);
+				});
+		});
+	}
 }
 
 export default new FirebaseManagerNS(true);
