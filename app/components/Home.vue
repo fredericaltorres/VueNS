@@ -90,7 +90,10 @@
                     if(selectedAction !== CANCEL_OPTION) {
                         switch(selectedAction) {
                             case 'Login' : 
-                                firebaseManagerNS.usernamePasswordLogin('fredericaltorres2@gmail.com', 'abcd1234');
+                                firebaseManagerNS.usernamePasswordLogin('fredericaltorres2@gmail.com', 'abcd1234')
+                                .then(() => { 
+                                    Tracer.log(`Main app notified of log in user:${firebaseManagerNS.getCurrentUserDisplayName()}`);
+                                });
                             break;
                         }
                     }

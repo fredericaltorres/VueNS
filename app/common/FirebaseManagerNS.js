@@ -56,8 +56,6 @@ class FirebaseManagerNS {
     // TODO: UPDATE
     __onNewUserAuthenticated (user) {
 
-        Tracer.log(`__onNewUserAuthenticated `, this);
-
         if (user) {
             if (user == null) {
                 this._currentUserAuthAuth = null;
@@ -241,7 +239,7 @@ class FirebaseManagerNS {
         Tracer.log(`usernamePasswordLogin A`, this);
         const $this = this;
 
-        firebase.login(
+        return firebase.login(
             {
               type: firebase.LoginType.PASSWORD,
               passwordOptions: {

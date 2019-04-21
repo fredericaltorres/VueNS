@@ -8,7 +8,7 @@ import Tracer from './common/Tracer';
 
 Tracer.coloredConsole = false;
 
-Vue.config.silent = false;
+//Vue.config.silent = false;
 
 Tracer.log(`Creating`, {name:'app.js'});
 
