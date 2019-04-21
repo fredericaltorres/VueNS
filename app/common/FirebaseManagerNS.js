@@ -44,12 +44,12 @@ class FirebaseManagerNS {
 		return this._firestoreDb;
     }
 
-	getCollection(name) {
+    getCollection(name) {
 
 		return this.getFirestoreDB().collection(name);
     }    
 
-	__rebuildDocument(doc,  idFieldName = DEFAULT_ID_FIELD_NAME) {
+    __rebuildDocument(doc,  idFieldName = DEFAULT_ID_FIELD_NAME) {
 
         const data = doc.data();
 		if(!data)
@@ -58,7 +58,7 @@ class FirebaseManagerNS {
 		return data;
 	}
 
-	__rebuildDocuments(documents) {
+    __rebuildDocuments(documents) {
 
 		const records = [];
 		documents.forEach((doc) => { 
@@ -67,12 +67,12 @@ class FirebaseManagerNS {
 		return records;
 	}
 
-	__unsubscribeMonitoredSnapshot(unsubscribe) {
+    __unsubscribeMonitoredSnapshot(unsubscribe) {
 
 		unsubscribe();
     }    
 
-	stopMonitorQuery(collection) {
+    stopMonitorQuery(collection) {
 		
 		if(this._monitoredSnapshot[collection]) {
 
@@ -82,15 +82,15 @@ class FirebaseManagerNS {
 		}
 	} 
 
-	whereClause(property, value, ignoreValue, operator = '==') {
+    whereClause(property, value, ignoreValue, operator = '==') {
 
 		if(value === ignoreValue)
 			return null;
 		return { property, operator, value };
     }
     // https://firebase.google.com/docs/database/web/lists-of-data
-	// https://firebase.google.com/docs/firestore/query-data/listen
-	monitorQuery(
+    // https://firebase.google.com/docs/firestore/query-data/listen
+    monitorQuery(
         collection, 
         callBack, 
         orderByColumn = null, 
