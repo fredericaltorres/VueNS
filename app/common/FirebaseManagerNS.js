@@ -95,6 +95,8 @@ class FirebaseManagerNS {
     getCurrentUser() {
         if(this._nativeScriptRunTime)
             return this._nativeScriptUser;
+            // The NativeScript getCurrentUser return a promise
+            // return firebase.getCurrentUser() => Promise
         else 
             return firebase.auth().currentUser;
     }
@@ -123,8 +125,6 @@ class FirebaseManagerNS {
 
         // TODO: UPDATE
         const currentUser = this.getCurrentUser();
-        Tracer.log(`__getCurrentUserProperty ${prop}, ${JSON.stringify(currentUser)}`);
-        
         if(this._nativeScriptRunTime) {
             return currentUser[prop];
         }
