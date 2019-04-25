@@ -37,8 +37,8 @@
 
 <script>
     const { alert, confirm, prompt, login, action, inputType } = require("tns-core-modules/ui/dialogs");
- 
-    import firebaseManagerNS from '../common/FirebaseManagerNS';
+    Tracer.coloredConsole = false; // firebaseManager is loaded before app.js
+    import firebaseManager from '../common/FirestoreManager';
     import DBLinkComponent from "./DBLinkComponent.vue";
     import Tracer from '../common/Tracer';
 
@@ -92,18 +92,18 @@
                         Tracer.log(`User action:${selectedAction}`, this);
                         switch(selectedAction) {
                             case 'Log In' : 
-                                firebaseManagerNS.usernamePasswordLogin('fredericaltorres2@gmail.com', 'abcd1234')
+                                firebaseManager.usernamePasswordLogin('fredericaltorres2@gmail.com', 'abcd1234')
                                 .then(() => { 
-                                    this.loggedInUser = firebaseManagerNS.getCurrentUserDisplayName();
+                                    this.loggedInUser = firebaseManager.getCurrentUserDisplayName();
                                     Tracer.log(`Main app notified of log in user:${this.loggedInUser}`);
-                                    firebaseManagerNS.currentUserHasRole(`administrator`)
+                                    firebaseManager.currentUserHasRoleAsync(`administrator`)
                                     .then((hasRole) => {
                                         Tracer.log(`has role Admin:${hasRole}`);
                                     });
                                 });
                             break;
                             case 'Log Out' : 
-                                firebaseManagerNS.logOut()
+                                firebaseManager.logOut()
                                 .then(() => { 
                                     this.loggedInUser = null;
                                     Tracer.log(`Main app notified of log out user:${this.loggedInUser}`);
@@ -122,7 +122,7 @@
                 Tracer.log(`Start loading dbLink category:${this.category}`, this);
                 this.setAppStatus({ busy: true });
                 const DBLinksCollectionName = 'DBLinks';
-                firebaseManagerNS.monitorQuery(
+                firebaseManager.monitorQuery(
                     DBLinksCollectionName,
                     (dbLinks) => { 
                         Tracer.log(`Collection ${DBLinksCollectionName} change detected, ${dbLinks.length} record(s)`, this);
@@ -131,7 +131,7 @@
                         Tracer.log(`End loading dbLink category:${this.category}`, this);
                     },
                     'category', undefined, undefined, 
-                    firebaseManagerNS.whereClause('category', this.selectedCategory, 'All')
+                    firebaseManager.whereClause('category', this.selectedCategory, 'All')
                 );
                 Tracer.log(`Start2 loading dbLink category:${this.category}`, this);
             }
@@ -169,7 +169,7 @@
                 return actions;
             },
             isAdministrator() {
-                return firebaseManagerNS.getCurrentUserLoadedIsAdmin();
+                return firebaseManager.getCurrentUserLoadedIsAdmin();
             }
         }
     };

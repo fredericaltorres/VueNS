@@ -1,10 +1,12 @@
 /*
-	Firebase / Cloud Firestore helper class
+	FirestoreManager:
+	- Firebase Firestore helper class
+	- Work in browser and for NativeScript on iOS.
 
 	Auth: https://firebase.google.com/docs/auth/web/manage-users?authuser=0
 	Pricing: https://firebase.google.com/pricing/?authuser=0
 	Database operation
-		Query			
+		Query
 			https://firebase.google.com/docs/firestore/query-data/get-data
 			https://firebase.google.com/docs/database/web/lists-of-data
 			https://firebase.google.com/docs/firestore/query-data/listen
@@ -15,16 +17,26 @@
 			https://firebase.google.com/docs/firestore/manage-data/add-data
 			https://firebase.google.com/docs/firestore/manage-data/transactions#batched-writes
 
-	Torres Frederic 2018			
+	Torres Frederic 2018, 2019.
 */
+
+// DEFINE THIS IMPORT AT BUILD TIME
+import firebase from "nativescript-plugin-firebase";
+
 import Tracer from './Tracer';
 import moment from "moment"; // http://momentjs.com/
-import FirestoreManagerConfig from './FirestoreManagerConfig';
 import ComponentUtil from './ComponentUtil';
 import TypeUtil from './TypeUtil';
 import TypeDefUtil from './TypeDefUtil';
 
+// In NativeScript mode all the connection properties are passed in the file GoogleService-Info.plist
+// In NativeScript the file returns an empty object
+import FirestoreManagerConfig from './FirestoreManagerConfig';
+
 const DEFAULT_MAX_RECORD = 400;
+
+// NativeScript firebase library assumes that the id field is named 'id'
+// See method __rebuildDocument
 const DEFAULT_ID_FIELD_NAME = "id";
 const UPDATE_AT_PROPERTY_NAME = "updatedAt";
 
@@ -33,95 +45,91 @@ const getSettings = () => {
 	return { timestampsInSnapshots: true };
 }
 
-// This class is exported as a singleton.
-// Therefore static members could be just members
+// This class is exported as a singleton. See export at the end of the file
 class FirestoreManager {
-
-	// static _initialized = false; // NativeScript does not support static, see definition at the end of the file
-	
-	// Static object to store snapshot unsusbcribe method, to be able to 
-	// unsubscribe and stop monitoring data
-	static _monitoredSnapshot = { }; // TODO Move that into old fashion static
 	
 	constructor(nativeScriptRunTime = false) {
 
 		this.ADMIN_ROLE = "administrator";
-		this._nativeScriptRunTime = nativeScriptRunTime;
-		this._settings = getSettings();
 		this.batchModeOn = false;
-		this._currentUserAuthAuth = null;
 		this.onCurrentUserLoadedCallBack = null;
 		this.name = "FirestoreManager";
+		this._nativeScriptRunTime = nativeScriptRunTime;
+		this._settings = getSettings();		
+		this._monitoredSnapshot = { }; // Store snapshot unsusbcribe method, to be able to  unsubscribe and stop monitoring data
+		this._currentUserAuthAuth = null;
+		this._nativeScriptUser = null;
+		Tracer.coloredConsole = false; // firebaseManager is loaded before app.js
+		Tracer.log(`FirestoreManager constructor(nativeScriptRunTime:${nativeScriptRunTime})`, this);
 
-		if(!FirestoreManager._initialized) {
+		if(this._nativeScriptRunTime) {
+			firebase.init({ // In NativeScript mode all the connection properties are passed in the file GoogleService-Info.plist
+				persist: false
+			}).then(
+				instance => {
+					Tracer.log("firebase.init done ", this);
+					// DO WE NEED THIS, Since we have code in usernamePasswordLogin() that call __onNewUserAuthenticated()
+					this.__setUpOnAuthStateChanged();
+				},
+				error => {
+					Tracer.log(`firebase.init -> error: ${error}`, this);
+				}
+			);
+		}
+		else {
 			
-			this.name = 'FirestoreManager';
-			Tracer.log(`FirestoreManager init`, this);
-
-			if(this._nativeScriptRunTime) {
-				// init() return a Promise
-				firebase.init({ persist: false }).then(
-					instance => { Tracer.log("firebase.init done ", this); },
-					error => { Tracer.log(`firebase.init -> error: ${error}`, this); }
-				);
-			}
-			else {
-				// initializeApp does not return a promise
-				firebase.initializeApp(FirestoreManagerConfig); 
-				this.__setUpOnAuthStateChanged();
-			}
-			FirestoreManager._initialized = true;
+			firebase.initializeApp(FirestoreManagerConfig);  // initializeApp does not return a promise
+			this.__setUpOnAuthStateChanged();
 		}
 	}
 
 	__setUpOnAuthStateChanged () {
 
-		firebase.auth().onAuthStateChanged((user) => {
+		firebase.auth().onAuthStateChanged(this.__onNewUserAuthenticated);
+	}
 
-			if (user) {
-				if (user == null) {
-					this._currentUserAuthAuth = null;
-					if(this.onCurrentUserLoadedCallBack)
-						this.onCurrentUserLoadedCallBack(null);					
-				}
-				else {
-					// let name = user.displayName;
-					// let email = user.email;
-					// let photoUrl = user.photoURL;
-					// let emailVerified = user.emailVerified;
-					// let uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
-					// 				 // this value to authenticate with your backend server, if
-					// 				 // you have one. Use User.getToken() instead.
+	__onNewUserAuthenticated (user) {
 
-					Tracer.log(`FirestoreManager currentUser:${this.getCurrentUser().displayName}, udi:${this.getCurrentUserUID()}`, this);
-
-					// https://firebase.google.com/docs/reference/js/firebase.User#getIdToken
-					// this.getCurrentUser().getIdToken().then(data => alert(data));
-
-					if(this.onCurrentUserLoadedCallBack)
-						this.onCurrentUserLoadedCallBack(this.getCurrentUser());
-				}
-			} else {
-				console.log('No user change or log out');
+		if (user) {
+			if (user == null) {
 				this._currentUserAuthAuth = null;
 				if(this.onCurrentUserLoadedCallBack)
 					this.onCurrentUserLoadedCallBack(null);
 			}
-		});
+			else {
+				// The user's ID, unique to the Firebase project. Do NOT use
+				// this value to authenticate with your backend server, if
+				// you have one. Use User.getToken() instead.
+
+				// https://firebase.google.com/docs/reference/js/firebase.User#getIdToken
+				// this.getCurrentUser().getIdToken().then(data => alert(data));
+
+				Tracer.log(`FirestoreManager currentUser:${this.getCurrentUserEmail()}, uid:${this.getCurrentUserUID()}`, this);
+				if(this.onCurrentUserLoadedCallBack)
+					this.onCurrentUserLoadedCallBack(this.getCurrentUser());
+			}
+		}
+		else {
+
+			Tracer.log('No user change or log out', this);
+			this._currentUserAuthAuth = null;
+			if(this.onCurrentUserLoadedCallBack)
+				this.onCurrentUserLoadedCallBack(null);
+		}
 	}
 
-	// If the current user auth auth record is not loaded then load it first, the return the
-	// answer in a promise
-	currentUserHasRole(role) {
+	// If the current user authorization record is not loaded then we load it
+	// Always returns the result as a promise
+	currentUserHasRoleAsync(role) {
 
 		return new Promise((resolve, reject) => {
 
 			if(this._currentUserAuthAuth === null) {
 
-				this.__loadUserAuthAuth( this.getCurrentUserUID() ).then( (currentUserAuthAuth) => {
+				this.__loadUserAuthAuthAsync( this.getCurrentUserUID() ).then( (currentUserAuthAuth) => {
 
 					if(currentUserAuthAuth === null) { // current record in _users collection was not found
-						
+
 						resolve(false);
 					}
 					else {
@@ -132,6 +140,7 @@ class FirestoreManager {
 				});
 			}
 			else {
+
 				resolve(this.__currentUserHasRole(role));
 			}
 		});
@@ -139,23 +148,33 @@ class FirestoreManager {
 
 	__currentUserHasRole(role) {
 
-		if(!this._currentUserAuthAuth)
+		if(!this._currentUserAuthAuth) {
+			Tracer.warn(`__currentUserHasRole() was called, but the variable _currentUserAuthAuth was not loaded with roles`);
 			return false;
-
-		return this._currentUserAuthAuth.roles.indexOf(role) !== -1;
+		}
+		const r = this._currentUserAuthAuth.roles.indexOf(role) !== -1;
+		Tracer.log(`__currentUserHasRole(${role}) : ${r}`, this);
+		return r;
 	}
 
 	// return true if the current user already loaded is an admin.
 	// if the user is not loaded, there is no call to load the user auth auth data
 	getCurrentUserLoadedIsAdmin() {
 
-		return this.__currentUserHasRole(this.ADMIN_ROLE);		
+		return this.__currentUserHasRole(this.ADMIN_ROLE);
 	}
 
-	// https://grokonez.com/android/firebase-authentication-sign-up-sign-in-sign-out-verify-email-android
 	getCurrentUser() {
 
-		return firebase.auth().currentUser;
+		if(this._nativeScriptRunTime) {
+			// The NativeScript getCurrentUser() return a promise
+			// In NativeScript mode _nativeScriptUser is loaded by function usernamePasswordLogin()
+			if(this._nativeScriptUser === null)
+				Tracer.throw("getCurrentUser() cannot be called if _nativeScriptUser has not be loaded");
+			return this._nativeScriptUser;
+		}
+		else 
+			return firebase.auth().currentUser;
 	}
 
 	isCurrentUserLoaded() {
@@ -170,7 +189,10 @@ class FirestoreManager {
 
 	getCurrentUserDisplayName() {
 
-		return this.__getCurrentUserProperty("displayName");
+		var r = this.__getCurrentUserProperty("displayName");
+		if(!r) {
+			return this.getCurrentUserEmail();
+		}
 	}
 
 	getCurrentUserEmail() {
@@ -181,21 +203,70 @@ class FirestoreManager {
 	__getCurrentUserProperty(prop) {
 
 		const currentUser = this.getCurrentUser();
-		if(currentUser)
-			return currentUser.providerData[0][prop];
-		return null;			
+		if(currentUser) {
+			if(this._nativeScriptRunTime) {
+				return currentUser[prop];
+			}
+			else {
+				return currentUser.providerData[0][prop];
+			}
+		}
+		else {
+			Tracer.warn(`currentUser not defined yet, cannot get ${prop}`, this);
+			return null;	
+		}
 	}
 
 	// Return a promise
-	__loadUserAuthAuth(uid) {
+	__loadUserAuthAuthAsync(uid) {
 
 		return this.loadDocument('_users', uid, null, false);
 	}
 
 	// Return a promise
 	logOut() {
+
 		this._currentUserAuthAuth = null;
-		return firebase.auth().signOut();
+
+		if(this._nativeScriptRunTime) {
+			firebase.logout();
+			return Promise.resolve();
+		}
+		else {
+			return firebaseWebApi.auth().signOut()
+				.then(() => Tracer.log("Logout OK", this))
+				.catch(error => Tracer.error("Logout error: " + JSON.stringify(error), this));
+		}
+	}
+
+	// https://firebase.google.com/docs/auth/web/manage-users?authuser=0
+	// https://github.com/eddyverbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#google-sign-in
+	usernamePasswordLogin(email, password) {
+		
+		Tracer.log(`usernamePasswordLogin`, this);
+		const $this = this;
+
+		if(this._nativeScriptRunTime) {
+			return firebase.login(
+				{
+					type: firebase.LoginType.PASSWORD,
+					passwordOptions: {
+						email: email,
+						password: password,
+					}
+				}
+			)
+			.then(user => {
+				const s = JSON.stringify(user);
+				Tracer.log(`usernamePasswordLogin user:${s}`, $this);
+				this._nativeScriptUser = user;
+				this.__onNewUserAuthenticated(user);
+			})
+			.catch(error => console.log(error));
+		}
+		else {
+			Tracer.throw("usernamePasswordLogin() not implemented for browser mode");
+		}
 	}
 
 	// https://firebase.google.com/docs/auth/web/manage-users?authuser=0
@@ -209,7 +280,8 @@ class FirestoreManager {
 				.then((result) => {
 
 					const user = result.user;
-					alert(`Hello ${user.displayName}`);
+					if(this._nativeScriptRunTime)
+						alert(`Hello ${user.displayName}`);
 					resolve();
 				})
 				.catch((error) => {
@@ -220,7 +292,7 @@ class FirestoreManager {
 		});
 	}
 
-	getFirestoreDB() {
+	__getFirestoreDB() {
 
 		if(this._firestoreDb) 
 			return this._firestoreDb;
@@ -334,25 +406,25 @@ class FirestoreManager {
 	}
 
 	getStorageFullPath(parentFolder, fileName) {
+
 		return (parentFolder == null) ? "" : parentFolder.toString() + "/" + fileName;
 	}
 
 	getCollection(name) {
 
-		return this.getFirestoreDB().collection(name);
+		return this.__getFirestoreDB().collection(name);
 	}
 
 	startBatch() {
 		
 		Tracer.log(`startBatch`, this);
 		this.batchModeOn = true;
-		return this.getFirestoreDB().batch();
+		return this.__getFirestoreDB().batch();
 	}
 
 	commitBatch(batch) {
 
-		Tracer.log(`commitBatch`, this);
-		console.log('batch', batch);
+		Tracer.log(`commitBatch ${batch}`, this);
 		this.batchModeOn = false;
 		return batch.commit();
 	}
@@ -390,11 +462,11 @@ class FirestoreManager {
 
 	stopMonitorQuery(collection) {
 		
-		if(FirestoreManager._monitoredSnapshot[collection]) {
+		if(this._monitoredSnapshot[collection]) {
 
 			Tracer.log(`Unsubscribe monitored snapshot:${collection}`, this);
-			this.__unsubscribeMonitoredSnapshot(FirestoreManager._monitoredSnapshot[collection]);
-			delete FirestoreManager._monitoredSnapshot[collection];
+			this.__unsubscribeMonitoredSnapshot(this._monitoredSnapshot[collection]);
+			delete this._monitoredSnapshot[collection];
 		}
 	} 
 
@@ -415,6 +487,7 @@ class FirestoreManager {
 			maxRecord = DEFAULT_MAX_RECORD,
 			whereClause = null
 		) {
+
 		Tracer.log(`monitorQuery ${collection}, orderByColumn:${orderByColumn}/${orderDirection}, maxRecord:${maxRecord}`, this);
 		this.stopMonitorQuery(collection);
 
@@ -433,13 +506,10 @@ class FirestoreManager {
 		}
 
 		// Return a function handler that can unsubscribe the snapshot 
-		FirestoreManager._monitoredSnapshot[collection] = query.onSnapshot((querySnapshot) => {
+		this._monitoredSnapshot[collection] = query.onSnapshot((querySnapshot) => {
 
 			let records = this.__rebuildDocuments(querySnapshot)
 			try {
-				// if(filterFunc) {
-				// 	records = records.filter(filterFunc);
-				// }
 				if(callBack) callBack(records);
 			}
 			catch(ex) {
@@ -468,6 +538,8 @@ class FirestoreManager {
 							resolve(null); // return null to notify caller that document was not found and it was expected
 					}
 
+					// In firestore sub collection in an object are not loaded by default
+					// We can specify a list of property in the object that point to sub collection
 					if(TypeUtil.isArray(subCollections)) {  // Load sub collections
 
 						const promises = [];
@@ -669,6 +741,10 @@ class FirestoreManager {
 	}
 }  
 
-FirestoreManager._initialized = false;
+function isNativeScript() {
+    if(typeof(global))
+        return global.toString().indexOf("NativeScriptGlobal") > 0;
+    return false;
+}
 
-export default new FirestoreManager();
+export default new FirestoreManager(isNativeScript());

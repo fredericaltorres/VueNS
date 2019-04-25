@@ -16,3 +16,11 @@
 # Firebase Auth
 file /Users/fredericaltorres/DVT/VueNS/platforms/ios/Podfile
 Un comment: pod 'GoogleSignIn'
+
+# Command Line
+## How to find a file
+[Finding Files from the Command Line](http://osxdaily.com/2012/10/29/finding-files-from-the-command-line/)
+
+```
+find ~ -iname "screen*"
+```

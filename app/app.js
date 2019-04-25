@@ -1,16 +1,18 @@
 import Vue from "nativescript-vue";
-// import firebase from "nativescript-plugin-firebase";
-// import config from "./shared/firebase-config";
-
 import Home from "./components/Home";
 import Tracer from './common/Tracer';
-// import firebaseManagerNS from './common/FirebaseManagerNS';
 
 Tracer.coloredConsole = false;
 
 //Vue.config.silent = false;
 
-Tracer.log(`Creating`, {name:'app.js'});
+function isNativeScript() {
+    if(typeof(global))
+        return global.toString().indexOf("NativeScriptGlobal") > 0;
+    return false;
+}
+
+Tracer.log(`Creating ~~~~~~ isNativeScript:${isNativeScript()}`, {name:'app.js'});
 
 new Vue({
     data() {
