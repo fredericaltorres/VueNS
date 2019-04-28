@@ -14,7 +14,7 @@
                             <Span class="textData" :text="getDBLink.description"/>
                         </FormattedString>
                     </Label>
-                </ScrollView>   
+                </ScrollView>
 
                 <LabelTextComponent :Label="`Link`" :Text="getDBLink.link" :ScrollHorizontally="true"/>
                 <LabelTextComponent :Label="`Category`" :Text="getDBLink.category"/>
@@ -30,7 +30,9 @@
                     </FormattedString>
                 </Label>
 
-                <Button style="font-weight: bold; font-size:20;" class="btn btn-primary" text="Open Link" @tap="openLink" />
+                <!-- <Button style="font-weight: bold; font-size:20;" class="btn btn-primary" text="Open Link" @tap="openLink" />
+                 -->
+                <FButton Text="Open Link" :OnClick="this.openLink"  />
             </StackLayout>
         </ScrollView>
     </Page>
@@ -41,6 +43,7 @@
 import Tracer from '../common/Tracer';
 import TypeDefUtil from '../common/TypeDefUtil';
 import LabelTextComponent from './LabelTextComponent';
+import FButton from './FButton';
 import WebViewer from './WebViewer';
 
 export default {
@@ -56,7 +59,8 @@ export default {
     },
     components: {
         LabelTextComponent,
-        WebViewer
+        WebViewer,
+        FButton
     },
     methods:{
         openLink() {

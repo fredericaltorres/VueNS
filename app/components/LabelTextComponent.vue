@@ -1,13 +1,14 @@
 <template>
     <StackLayout>
+
         <Label v-if="this.isLabelDefined" class="textLabel" :text="this.Label" horizontalAlignment="center" verticalAlignment="center"/>
         
-        <Label v-if="!this.ScrollHorizontally" class="textData"  :text="this.Text" horizontalAlignment="center" verticalAlignment="center"/>
+        <Label v-if="!this.ScrollHorizontally" class="textData" :text="this.Text" horizontalAlignment="center" verticalAlignment="center"/>
     
         <ScrollView v-if="this.ScrollHorizontally" orientation="horizontal" scrollBarIndicatorVisible="true">
-             <Label class="textData"  :text="this.Text" horizontalAlignment="center" verticalAlignment="center"/>
+            
+            <Label class="textData" :text="this.Text" horizontalAlignment="center" verticalAlignment="center"/>
         </ScrollView>
-    
     </StackLayout>
 </template>
 

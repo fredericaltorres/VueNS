@@ -27,8 +27,8 @@
 
                 <GridLayout columns="*,*" rows="auto">
           
-                    <Button row="0" col="0" :isEnabled="!this.isBusy" class="btn btn-primary" text="Category" @tap="onCategoryClick" />
-                    <Button row="0" col="1" :isEnabled="!this.isBusy" class="btn btn-primary" text="Actions" @tap="onActionsClick" />
+                    <FButton row="0" col="0" :isEnabled="!this.isBusy" Text="Category" :OnClick="this.onCategoryClick" />
+                    <FButton row="0" col="1" :isEnabled="!this.isBusy" Text="Actions"  :OnClick="onActionsClick" />
                 </GridLayout>
             </StackLayout>
 		</ScrollView>
@@ -40,6 +40,7 @@
     Tracer.coloredConsole = false; // firebaseManager is loaded before app.js
     import firebaseManager from '../common/FirestoreManager';
     import DBLinkComponent from "./DBLinkComponent.vue";
+    import FButton from "./FButton.vue";
     import Tracer from '../common/Tracer';
 
     const AppStatus = {
@@ -65,7 +66,8 @@
             }
         },
         components: {
-            DBLinkComponent
+            DBLinkComponent,
+            FButton
         },
         methods: {
             setAppStatus({ busy }) {
