@@ -1,7 +1,7 @@
 // Import the theme’s variables. If you’re using a color scheme
 // other than “light”, switch the path to the alternative scheme,
 // for example '~nativescript-theme-core/scss/dark'.
-@import '~nativescript-theme-core/scss/light';
+@import '~nativescript-theme-core/scss/dark';
 
 // Custom colors
 $background-dark: #F8F8F8 !default;
@@ -37,7 +37,6 @@ $base-font-size: 11;
 $border-width: 1;
 $border-radius: 3;
 
-
 /**
  * Theme variables overrides
 **/
@@ -67,10 +66,10 @@ $ab-background: $accent;
 $ab-color: $white;
 
 // Buttons
-$btn-color-inverse: $white;
-$btn-color: $accent;
-$btn-color-secondary: darken($btn-color, 10%);
-$btn-color-outline-highlighted: lighten($btn-color, 10%);
+// node_modules/nativescript-theme-core/scss/_variables.scss
+
+$btn-color: $accent; // Button background color
+$btn-color-outline-highlighted: darken($btn-color, 99%);  // Text color when button is clicked
 
 //Text colors
 $headings-color: $blue-dark;

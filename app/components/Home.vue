@@ -190,11 +190,6 @@
         background-color: $Gray-Background;   
         width: 100%; 
     }
-
-    .btn {
-        font-size: 20;
-        font-weight: bold;
-    }
     .listView-Image {
         padding-left: 4;
         padding-right: 4;

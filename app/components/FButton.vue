@@ -45,9 +45,12 @@ export default {
     @import '../app-common';
     @import './app-component';
 
+    // /Users/fredericaltorres/DVT/VueNS/node_modules/nativescript-theme-core/scss/_variables.scss
+
     .FButtonStyle {
         font-weight: bold; 
         font-size:20;
+        border-radius: 5;
         border-color: black;
         border-width: 2;
     }
