@@ -14,10 +14,6 @@ export default {
         },
         OnClick: {
             type: Function
-        },
-        ScrollHorizontally : {
-            type: Boolean,
-            default: false
         }
     },
     data() {

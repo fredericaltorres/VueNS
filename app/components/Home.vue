@@ -51,6 +51,8 @@
     const APP_TITLE = "dbLinks";
     const repoUrl = "https://api.github.com/users/fredericaltorres/repos";
     const CANCEL_OPTION = "Cancel";
+    const USER_NAME = 'fredericaltorres2@gmail.com';
+    const PASSWORD = 'abcd1234';
     
     export default {
         data() {
@@ -94,21 +96,25 @@
                         Tracer.log(`User action:${selectedAction}`, this);
                         switch(selectedAction) {
                             case 'Log In' : 
-                                firebaseManager.usernamePasswordLogin('fredericaltorres2@gmail.com', 'abcd1234')
+                                this.setAppStatus({ busy: true });
+                                firebaseManager.usernamePasswordLogin(USER_NAME, PASSWORD)
                                 .then(() => { 
                                     this.loggedInUser = firebaseManager.getCurrentUserDisplayName();
                                     Tracer.log(`Main app notified of log in user:${this.loggedInUser}`);
                                     firebaseManager.currentUserHasRoleAsync(`administrator`)
                                     .then((hasRole) => {
                                         Tracer.log(`has role Admin:${hasRole}`);
+                                        this.setAppStatus({ busy: false });
                                     });
                                 });
                             break;
                             case 'Log Out' : 
+                                this.setAppStatus({ busy: true });
                                 firebaseManager.logOut()
                                 .then(() => { 
                                     this.loggedInUser = null;
                                     Tracer.log(`Main app notified of log out user:${this.loggedInUser}`);
+                                    this.setAppStatus({ busy: false });
                                 });
                             break;
                         }
