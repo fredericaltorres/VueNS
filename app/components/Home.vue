@@ -10,13 +10,13 @@
                     <FormattedString>
 
                         <Span class="fa" text.decode="&#xf05a;  "/> <!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
-                        
-                        <Span :text="`${DBLinks.length} links - Category: ${this.category}`"/>
-                        <Span :text="this.isBusy ? ` Bsy` : ` Rdy` "/>
 
-                        <!-- <Span v-if="!this.isBusy" class="fa" text.decode=" &#xf00c; "/>
+<!--  BREAK THE REFRESH CYCLE                       
+                        <Span v-if="!this.isBusy" class="fa" text.decode=" &#xf00c; "/>
                         <Span v-if=" this.isBusy" class="fa" text.decode=" &#xf110; "/> -->
 
+                        <Span :text="`${DBLinks.length} links - Category: ${this.category}`"/>
+                        <Span :text="this.isBusy ? ` - Bsy` : ` - Rdy` "/>
                     </FormattedString>
                 </Label>
 
