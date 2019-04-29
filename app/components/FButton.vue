@@ -27,7 +27,7 @@ export default {
     },
     methods:{
         _onClick() {
-            Tracer.log(`_onClick`, this);
+            Tracer.log(`_onClick ${this.Text}`, this);
             return this.OnClick();
         }
     },

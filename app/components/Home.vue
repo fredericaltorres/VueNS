@@ -1,17 +1,24 @@
 <template>
     <Page class="page">
         <ActionBar class="action-bar">
-            <Label class="action-bar-title" :text="`${this.appTitle + ( this.loggedInUser ? ' - '+this.loggedInUser : '')}`"></Label>
+            <Label class="action-bar-title" :text="`${this.appTitle + ( this.loggedInUser ? ' - '+this.loggedInUser : '' ) }`"/>
         </ActionBar>
 		<ScrollView>
 			<StackLayout class="home-panel">
 
 			   <Label class="labelInfoTopBar" horizontalAlignment="center" verticalAlignment="center">
                     <FormattedString>
+
                         <Span class="fa" text.decode="&#xf05a;  "/> <!-- https://fontawesome.com/v3.2.1/cheatsheet/ -->
-                        <Span :text="`${DBLinks.length} links - Category: ${this.category} - ${this.appStatus}`"/>
+                        
+                        <Span :text="`${DBLinks.length} links - Category: ${this.category}`"/>
+                        <Span :text="this.isBusy ? ` Bsy` : ` Rdy` "/>
+
+                        <!-- <Span v-if="!this.isBusy" class="fa" text.decode=" &#xf00c; "/>
+                        <Span v-if=" this.isBusy" class="fa" text.decode=" &#xf110; "/> -->
+
                     </FormattedString>
-                </Label>                
+                </Label>
 
                 <ListView for="dbLink in DBLinks" @itemTap="onDBLinkSelectedInListView" left="2" top="2" height="400" width="100%" >
                     <v-template>
@@ -44,7 +51,7 @@
     import Tracer from '../common/Tracer';
 
     const AppStatus = {
-        Busy : 'Loading...',
+        Busy  : 'Loading...',
         Ready : 'Ready'
     }
 
@@ -73,12 +80,11 @@
         },
         methods: {
             setAppStatus({ busy }) {
-                if(busy) {
+                Tracer.log(`setAppStatus busy:${busy}`);
+                if(busy)
                     this.appStatus = AppStatus.Busy;
-                }
-                else {
+                else
                     this.appStatus = AppStatus.Ready;
-                }
             },
             onCategoryClick() {
                 action("Select a category", CANCEL_OPTION, this.categories)
@@ -127,8 +133,8 @@
                 this.$navigateTo(DBLinkComponent, { props: { dbLink: dbLink } });  // https://docs.nativescript.org/core-concepts/navigation
             },
             monitorDBLinks() {
-                Tracer.log(`Start loading dbLink category:${this.category}`, this);
                 this.setAppStatus({ busy: true });
+                Tracer.log(`Loading dbLink category:${this.category}`, this);
                 const DBLinksCollectionName = 'DBLinks';
                 firebaseManager.monitorQuery(
                     DBLinksCollectionName,
@@ -136,12 +142,10 @@
                         Tracer.log(`Collection ${DBLinksCollectionName} change detected, ${dbLinks.length} record(s)`, this);
                         this.DBLinks = dbLinks;
                         this.setAppStatus({ busy: false });
-                        Tracer.log(`End loading dbLink category:${this.category}`, this);
                     },
                     'category', undefined, undefined, 
                     firebaseManager.whereClause('category', this.selectedCategory, 'All')
                 );
-                Tracer.log(`Start2 loading dbLink category:${this.category}`, this);
             }
         },
         created() {
@@ -153,7 +157,9 @@
         },
         computed: {
             isBusy () {
-                return this.appStatus === AppStatus.Busy;
+                const r = this.appStatus === AppStatus.Busy;
+                Tracer.log(`isBusy ${r}`);
+                return r;
             },
             selectedCategory() {
                 return this.category;
